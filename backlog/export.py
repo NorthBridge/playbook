@@ -22,7 +22,6 @@ def main():
     parser.add_argument('--log', action="store", dest="log")
     args = parser.parse_args()
     if sys.argv == 1:
-        print "hello"
         loglevel = args.log
 
     #logging.basicConfig(filename='export.log',level=logging.DEBUG)
