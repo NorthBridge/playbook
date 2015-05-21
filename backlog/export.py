@@ -14,6 +14,48 @@ import logging
 import sys
 import argparse
 import time
+import json
+from restkit import Resource, BasicAuth, Connection, request
+from socketpool import ConnectionPool
+
+def log_repos():
+    logging.basicConfig(filename='export.log', level='DEBUG',
+                        format='%(asctime)s %(message)s')
+    logging.debug('log_repos called')
+    pool = ConnectionPool(factory=Connection)
+    serverurl="https://api.github.com"
+
+    # add your username or password here, or prompt for them
+    auth = BasicAuth("""user""","""password""")
+
+    # use your basic auth to request a token
+    # this is an example taken from http://developer.github.com/v3/
+    authreqdata = { "scopes": [ "public_repo" ], "note": "Export Module" }
+    resource = Resource('https://api.github.com/authorizations',
+                        pool=pool, filters=[auth])
+    response = resource.post(headers={ "Content-Type": "application/json" },
+                             payload=json.dumps(authreqdata))
+    token = json.loads(response.body_string())['token']
+    # TODO: token needs to be cached somehow (in a config file?)
+    # presently, this script only works once,
+    # then get an error: authorization code already exists
+    # personal access token then needs to be deleted from GitHub
+
+    """
+    Once you have a token, you can pass that in the Authorization header
+    You can store this in a cache and throw away the user/password
+    This is just an example query.  See http://developer.github.com/v3/
+    for more about the url structure
+    """
+    resource = Resource('https://api.github.com/orgs/northbridge/repos',
+                        pool=pool)
+    headers = {'Content-Type' : 'application/json' }
+    headers['Authorization'] = 'token %s' % token
+    response = resource.get(headers = headers)
+    repos = json.loads(response.body_string())
+
+    # TODO: the following just dumps everything about all the repos ugly-like
+    print(repos)
 
 def main():
     exit_code = 0
@@ -39,7 +81,7 @@ def main():
     logging.critical('EXPORT PROCESS STARTED')
 
     # DO STUFF
-    time.sleep(5)
+    log_repos()
 
     # END TIME
     logging.critical('EXPORT PROCESS ENDED WITH EXIT CODE: %i', exit_code)
