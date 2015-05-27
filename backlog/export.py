@@ -24,9 +24,9 @@ def log_repos():
     logging.debug('log_repos called')
     pool = ConnectionPool(factory=Connection)
     serverurl="https://api.github.com"
-
+    """
     # add your username or password here, or prompt for them
-    auth = BasicAuth("""user""","""password""")
+    auth = BasicAuth(user,password)
 
     # use your basic auth to request a token
     # this is an example taken from http://developer.github.com/v3/
@@ -36,17 +36,23 @@ def log_repos():
     response = resource.post(headers={ "Content-Type": "application/json" },
                              payload=json.dumps(authreqdata))
     token = json.loads(response.body_string())['token']
+    print(token)
     # TODO: token needs to be cached somehow (in a config file?)
     # presently, this script only works once,
     # then get an error: authorization code already exists
     # personal access token then needs to be deleted from GitHub
 
-    """
+   
     Once you have a token, you can pass that in the Authorization header
     You can store this in a cache and throw away the user/password
     This is just an example query.  See http://developer.github.com/v3/
     for more about the url structure
+    
     """
+    config_file = open('CONFIG', 'r')
+    token = config_file.read()
+    config_file.close()
+    # print(token)
     resource = Resource('https://api.github.com/orgs/northbridge/repos',
                         pool=pool)
     headers = {'Content-Type' : 'application/json' }
@@ -56,6 +62,7 @@ def log_repos():
 
     # TODO: the following just dumps everything about all the repos ugly-like
     print(repos)
+    #print response['
 
 def main():
     exit_code = 0
