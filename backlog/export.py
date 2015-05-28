@@ -17,6 +17,7 @@ import time
 import json
 from restkit import Resource, BasicAuth, Connection, request
 from socketpool import ConnectionPool
+import psycopg2
 
 def log_repos():
     logging.basicConfig(filename='export.log', level='DEBUG',
@@ -50,7 +51,7 @@ def log_repos():
     
     """
     config_file = open('CONFIG', 'r')
-    token = config_file.read()
+    token = config_file.readline()
     config_file.close()
     # print(token)
     resource = Resource('https://api.github.com/orgs/northbridge/repos',
@@ -62,7 +63,26 @@ def log_repos():
 
     # TODO: the following just dumps everything about all the repos ugly-like
     print(repos)
-    #print response['
+    #print response['full_name']
+
+def log_rows():
+    config_file = open('CONFIG', 'r')
+    token = config_file.readline()
+    db = config_file.readline().rstrip()
+    hst = config_file.readline().rstrip()
+    usr = config_file.readline().rstrip()
+    pswrd = config_file.readline().rstrip()
+    config_file.close()
+    conn = psycopg2.connect(database=db,
+                            host=hst, user=usr,
+                            password=pswrd)
+    cur = conn.cursor()
+    cur.execute("SELECT count(*) FROM backlog;")
+    count = cur.fetchone()
+    print 'Number of rows in backlog: ', count
+    if conn:
+        conn.close()
+    
 
 def main():
     exit_code = 0
@@ -89,6 +109,7 @@ def main():
 
     # DO STUFF
     log_repos()
+    log_rows()
 
     # END TIME
     logging.critical('EXPORT PROCESS ENDED WITH EXIT CODE: %i', exit_code)
