@@ -18,6 +18,7 @@ import json
 from restkit import Resource, BasicAuth, Connection, request
 from socketpool import ConnectionPool
 import psycopg2
+import psycopg2.extras
 
 def log_repos():
     logging.basicConfig(filename='export.log', level='DEBUG',
@@ -76,10 +77,15 @@ def log_rows():
     conn = psycopg2.connect(database=db,
                             host=hst, user=usr,
                             password=pswrd)
-    cur = conn.cursor()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     cur.execute("SELECT count(*) FROM backlog;")
     count = cur.fetchone()
     print 'Number of rows in backlog: ', count
+    cur.execute("SELECT * FROM backlog;")
+    rows = cur.fetchall()
+    for row in rows:
+        print row['story_title'], ':', row['story_descr']
+    cur.close()
     if conn:
         conn.close()
     
