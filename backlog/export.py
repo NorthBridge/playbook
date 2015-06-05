@@ -19,6 +19,9 @@ from restkit import Resource, BasicAuth, Connection, request
 from socketpool import ConnectionPool
 import psycopg2
 import psycopg2.extras
+from collections import OrderedDict
+from pygithub3 import Github
+
 
 def log_repos():
     logging.basicConfig(filename='export.log', level='DEBUG',
@@ -28,7 +31,7 @@ def log_repos():
     serverurl="https://api.github.com"
     """
     # add your username or password here, or prompt for them
-    auth = BasicAuth(user,password)
+    auth = BasicAuth('intrepidcurmudgeon','********')
 
     # use your basic auth to request a token
     # this is an example taken from http://developer.github.com/v3/
@@ -44,13 +47,13 @@ def log_repos():
     # then get an error: authorization code already exists
     # personal access token then needs to be deleted from GitHub
 
-   
+    
     Once you have a token, you can pass that in the Authorization header
     You can store this in a cache and throw away the user/password
     This is just an example query.  See http://developer.github.com/v3/
     for more about the url structure
-    
     """
+    
     config_file = open('CONFIG', 'r')
     token = config_file.readline()
     config_file.close()
@@ -63,7 +66,19 @@ def log_repos():
     repos = json.loads(response.body_string())
 
     # TODO: the following just dumps everything about all the repos ugly-like
-    print(repos)
+    # print(repos)
+        
+
+    gh = Github(login=lgn, password=psswrd, token=token)
+    incur = gh.users.get()
+    
+    #print json.dumps(data)
+   # resource = Resource('https://api.github.com/repos/northbridge/playbook/milestones', pool = pool)
+    data = { 'title': 'test', 'state': 'open', 'description': 'Bruno & Blake', 'due_on': '2016-10-09T23:39:01Z' }
+   # response = resource.post(headers = headers, payload=json.dumps(data))
+
+    gh.issues.milestones.create(data, user="northbridge", repo="playbook")
+    
     #print response['full_name']
 
 def log_rows():
@@ -81,10 +96,27 @@ def log_rows():
     cur.execute("SELECT count(*) FROM backlog;")
     count = cur.fetchone()
     print 'Number of rows in backlog: ', count
-    cur.execute("SELECT * FROM backlog;")
+    cur.execute("SELECT * FROM backlog WHERE status_id_fk = 14;")
     rows = cur.fetchall()
+    log_file = open('export.log', 'a')
+    log_file.write('Rows to be exported to GitHub:\n')
+    i = 0
+    title = []
+    descr = []
+    status = []
     for row in rows:
-        print row['story_title'], ':', row['story_descr']
+         title.append(str(row['story_title']))
+         descr.append(str(row['story_descr']))
+         status.append(str(row['status_id_fk']))
+         i = i + 1
+    for j in range (0, i):
+        log_file.write(title[j])
+        log_file.write(' | ')
+        log_file.write(descr[j])
+        log_file.write(' | Status: ')
+        log_file.write(status[j])
+        log_file.write('\n')
+    log_file.close()
     cur.close()
     if conn:
         conn.close()
