@@ -22,6 +22,8 @@ import psycopg2.extras
 from collections import OrderedDict
 from pygithub3 import Github
 from milestoneDAO import MilestoneDAO
+from issueDAO import IssueDAO
+from issue import Issue, createAcceptIssue
 
 
 def log_repos():
@@ -122,7 +124,6 @@ def log_rows():
     if conn:
         conn.close()
     
-
 def main():
     exit_code = 0
     loglevel = 'ERROR'
@@ -148,17 +149,27 @@ def main():
 
     # DO STUFF
     # log_repos()
-
-    # log Milestone
+    # log_rows()
     mDao = MilestoneDAO()
+    iDao = IssueDAO()
     for milestone in mDao.getMilestones():
-        number = milestone.create()
-        if (number is None):
+        milestoneNumber = milestone.create()
+        if (milestoneNumber is None):
             print "Error when trying to create milestone."
         else:
-            print "Number of new milestone [refers to \'%s\']: %d.\n" % (milestone.getTitle(), number)
-    
-    # log_rows()
+            print "Milestone created with #%d [Title: \'%s\']" % (milestoneNumber, milestone.getTitle())
+            print "Creating associated issues:"
+            for issue in iDao.getIssuesByMilestone(milestone):
+                issueNumber = issue.create() 
+                if issueNumber is None:
+                    print "\tError creating Issue associated with milestone #%d" % milestoneNumber
+                else:
+                    print "\tIssue #%d [Title: \'%s\'] associated to Milestone #%d" % (issueNumber, issue.getTitle(), milestoneNumber)
+            issue, issueNumber = createAcceptIssue(milestone.getNumber(), milestone.getRepo())
+            if issueNumber is None:
+                print "\tError creating Accept Issue associated with milestone #%d" % milestoneNumber
+            else:
+                print "\tAccept Issue #%d associated to Milestone #%d" % (issueNumber, milestoneNumber)
 
     # END TIME
     logging.critical('EXPORT PROCESS ENDED WITH EXIT CODE: %i', exit_code)
