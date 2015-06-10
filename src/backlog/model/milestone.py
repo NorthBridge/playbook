@@ -1,17 +1,19 @@
 from pygithub3 import Github
-from pygithub3.exceptions import UnprocessableEntity 
+from pygithub3.exceptions import UnprocessableEntity
+from configHelper import getConfig 
 
 class Milestone(object):
     
-    MILESTONE_URL = 'https://api.github.com/repos/%s/%s/milestones'
-    OWNER = 'Northbridge'
-    
     def __init__(self, id, title, state, desc, due_on, repo):
-        config_file = open('CONFIG', 'r')
-        # rstrip removes the \n from the token
-        token = config_file.readline().rstrip()
-        config_file.close()
-        self.__gh = Github(token=token, user=Milestone.OWNER, repo=repo)
+        #Importing here to avoid circular import issues 
+        # (how to solve in a better way?).
+        from milestoneDAO import MilestoneDAO
+        
+        token = getConfig("github.token")
+        owner = getConfig("github.owner")
+        
+        self.__gh = Github(token=token, user=owner, repo=repo)
+        self.__milestoneDao = MilestoneDAO()
         self.__id = id
         self.__title = title
         self.__state = state
@@ -20,20 +22,27 @@ class Milestone(object):
         self.__repo = repo
         self.__number = None
         
-    #TODO: verify repo and data before submit
-    def create(self, owner=OWNER):
-        data = {
-            'title': self.__title,
-            'state': self.__state,
-            'description': self.__desc,
-            'due_on': self.__due_on
-        }
+    def create(self):
+        
+        if self.__title is None:
+            #TODO: Log issue and return/throw exception
+            return
+        
+        data = { 'title': self.__title }
+            
+        if self.__state is not None:
+            data['state'] = self.__state
+        
+        if self.__desc is not None:
+            data['description'] = self.__desc
+            
+        if self.__due_on is not None:
+            data['due_on'] = self.__due_on
+            
         try:
             ghMilestone = self.__gh.issues.milestones.create(data)
             self.__number = ghMilestone.number
-            from milestoneDAO import MilestoneDAO
-            mDao = MilestoneDAO()
-            mDao.updateMilestoneNumber(self)
+            self.__milestoneDao.updateMilestoneNumber(self)
             return self.__number
         except UnprocessableEntity as mExistsError:
             #TODO: log error
@@ -63,5 +72,18 @@ class Milestone(object):
         
     def setNumber(self, number):
         self.__number = number
+        
+    def getGitHub(self):
+        return self.__gh
+    
+    def setGitHub(self, gitHub):
+        self.__gh = gitHub
+        
+    def getMilestoneDao(self):
+        return self.__milestoneDao
+    
+    def setMilestoneDao(self, dao):
+        self.__milestoneDao = dao
+        
     
     
