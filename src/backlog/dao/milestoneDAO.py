@@ -4,6 +4,7 @@ from milestone import Milestone
 class MilestoneDAO(BaseDAO):
     
     SELECTED_STATUS = 14
+    IN_PROGRESS_STATUS = 15
     
     def __init__(self):
         super(MilestoneDAO, self).__init__()
@@ -28,12 +29,14 @@ class MilestoneDAO(BaseDAO):
         return milestones
     
     def updateMilestoneNumber(self, milestone):
-        stmt = ('UPDATE backlog SET github_number = %s where id = %s;')
+        stmt = ('UPDATE backlog SET github_number = %s, status_id_fk = %s where id = %s;')
         try:
-            cur = super(MilestoneDAO, self).execute(stmt, (milestone.getNumber(), milestone.getId()))
+            cur = super(MilestoneDAO, self).execute(stmt, (milestone.getNumber(), 
+                                                           MilestoneDAO.IN_PROGRESS_STATUS, 
+                                                           milestone.getId()))
             super(MilestoneDAO, self).getConnection().commit()
         except Exception:
             super(MilestoneDAO, self).getConnection().rollback()
-        else:
+        finally:
             cur.close()
     
