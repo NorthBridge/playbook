@@ -1,0 +1,12 @@
+{
+    "github": {
+        "owner": "northbridge",
+        "token": "83ae830395a5f6de16cdebdedf46e90090295c45"
+    },
+    "database": {
+        "name": "northbr6_devwaterwheel", 
+        "host": "localhost",
+        "user": "postgres",
+        "password": "postgres"
+    }
+}
