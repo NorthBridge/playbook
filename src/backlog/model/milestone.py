@@ -2,7 +2,7 @@ from pygithub3 import Github
 from configHelper import getConfig 
 import logging
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("playbook")
 
 class Milestone(object):
     

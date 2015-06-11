@@ -3,7 +3,7 @@ import re
 import json
 import logging
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('playbook')
 
 #code from http://stackoverflow.com/questions/18089229/extracting-values-from-deeply-nested-json-structures
 def getConfig(key):

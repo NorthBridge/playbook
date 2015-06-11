@@ -1,9 +1,8 @@
 from pygithub3 import Github
-from pygithub3.exceptions import UnprocessableEntity
 from configHelper import getConfig
 import logging
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('playbook')
 
 def createAcceptIssue(milestoneNumber, milestoneRepo):
         title = 'Accept the story (milestone)'
@@ -60,13 +59,10 @@ class Issue(object):
             
         try:
             ghIssue = self.__gh.issues.create(data)
-            logger.info("")
-            #TODO: Log info of created issue
+            logger.info("Issue exported to GitHub: %s", data)
             return ghIssue.number
-        except UnprocessableEntity as mExistsError:
-            #TODO: log error and handle exception
-            # (maybe handle a more generic exception?)
-            print mExistsError
+        except Exception:
+            logger.exception("Error exporting issue to GitHub: %s", data)
             return None
 
     def getId(self):

@@ -2,7 +2,7 @@ import psycopg2.extras
 from configHelper import getConfig 
 import logging
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('playbook')
 
 class BaseDAO(object):
     """BaseDAO is a base class that encapsulates basic logic necessary to 
