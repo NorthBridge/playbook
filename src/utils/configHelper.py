@@ -1,6 +1,9 @@
 import os
 import re
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 #code from http://stackoverflow.com/questions/18089229/extracting-values-from-deeply-nested-json-structures
 def getConfig(key):
@@ -11,6 +14,7 @@ def getConfig(key):
             try:
                 data = data[p or int(i)]
             except Exception:
-                #TODO: Log error
+                logger.exception("Unable to retrieve data from CONFIG file" +
+                                 " [key=\'%s\'].", key)
                 data = None
         return data

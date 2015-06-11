@@ -10,11 +10,13 @@ class MilestoneDAO(BaseDAO):
         super(MilestoneDAO, self).__init__()
     
     def getMilestones(self):
-        stmt=('SELECT b.id, b.story_title, b.story_descr, e.end_dttm, b.github_repo'
+        stmt=('SELECT b.id, b.story_title, b.story_descr, e.end_dttm,'
+              '       b.github_repo' 
               '  FROM event e, backlog b'
               ' WHERE b.sprint_id_fk = e.id'
               '   AND b.status_id_fk = %s;')
-        cur = super(MilestoneDAO, self).execute(stmt, (MilestoneDAO.SELECTED_STATUS,))
+        cur = super(MilestoneDAO, self).execute(stmt, 
+                                                (MilestoneDAO.SELECTED_STATUS,))
         rows = cur.fetchall()
         cur.close()
         
@@ -29,7 +31,8 @@ class MilestoneDAO(BaseDAO):
         return milestones
     
     def updateMilestoneNumber(self, milestone):
-        stmt = ('UPDATE backlog SET github_number = %s, status_id_fk = %s where id = %s;')
+        stmt = ('UPDATE backlog SET github_number = %s, status_id_fk = %s'
+                ' WHERE id = %s;')
         try:
             cur = super(MilestoneDAO, self).execute(stmt, (milestone.getNumber(), 
                                                            MilestoneDAO.IN_PROGRESS_STATUS, 

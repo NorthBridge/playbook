@@ -1,6 +1,8 @@
 from pygithub3 import Github
-from pygithub3.exceptions import UnprocessableEntity
 from configHelper import getConfig 
+import logging
+
+logger = logging.getLogger(__name__)
 
 class Milestone(object):
     
@@ -25,7 +27,9 @@ class Milestone(object):
     def create(self):
         
         if self.__title is None:
-            #TODO: Log issue and return/throw exception
+            logger.error("Title is a required field. This milestone will not" +
+                         " be exported to GitHub: %s", self.__dict__)
+            #TODO: throw exception!?!?!?!
             return
         
         data = { 'title': self.__title }
@@ -41,12 +45,16 @@ class Milestone(object):
             
         try:
             ghMilestone = self.__gh.issues.milestones.create(data)
+            logger.info("Milestone exported to GitHub: %s", data)
             self.__number = ghMilestone.number
             self.__milestoneDao.updateMilestoneNumber(self)
+            logger.info("Backlog table [id=%d] updated with status = %d and" +
+                        " github_number = %d", 
+                         self.__id, self.__milestoneDao.IN_PROGRESS_STATUS, 
+                         self.__number)
             return self.__number
-        except UnprocessableEntity as mExistsError:
-            #TODO: log error
-            print mExistsError
+        except Exception:
+            logger.exception("Error exporting milestone to GitHub: %s", data)
             return None
     
     def getId(self):

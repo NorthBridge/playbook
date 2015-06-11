@@ -1,6 +1,9 @@
 from pygithub3 import Github
 from pygithub3.exceptions import UnprocessableEntity
 from configHelper import getConfig
+import logging
+
+logger = logging.getLogger(__name__)
 
 def createAcceptIssue(milestoneNumber, milestoneRepo):
         title = 'Accept the story (milestone)'
@@ -13,6 +16,9 @@ def createAcceptIssue(milestoneNumber, milestoneRepo):
                       milestoneNumber, 
                       None, 
                       milestoneRepo)
+        logger.info("Creating Accept Issue related to milestone #%d" +
+                    " into repository %s", 
+                    milestoneNumber, milestoneRepo)
         return (issue, issue.create())
         
 class Issue(object):
@@ -33,7 +39,9 @@ class Issue(object):
         
     def create(self):
         if self.__title is None:
-            #TODO: Log issue and return/throw exception
+            logger.error("Title is a required field. This issue will not" +
+                         " be exported to GitHub: %s", self.__dict__)
+            #TODO: throw exception!?!?!?!
             return
         
         data = { 'title': self.__title }
@@ -52,6 +60,7 @@ class Issue(object):
             
         try:
             ghIssue = self.__gh.issues.create(data)
+            logger.info("")
             #TODO: Log info of created issue
             return ghIssue.number
         except UnprocessableEntity as mExistsError:

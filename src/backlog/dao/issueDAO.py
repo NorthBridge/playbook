@@ -8,7 +8,8 @@ class IssueDAO(BaseDAO):
     def getIssuesByMilestone(self, milestone):
         #TODO: Verify if this is the right way to check
         assert milestone.getNumber() is not None
-        stmt = ('SELECT ac.id, ac.title, ac.descr, b.github_number, b.github_repo, t.name'
+        stmt = ('SELECT ac.id, ac.title, ac.descr, b.github_number,'
+                '       b.github_repo, t.name'
                 '  FROM acceptance_criteria ac, backlog b, team t'
                 ' WHERE b.github_number = %s'
                 '   AND ac.backlog_id_fk = b.id'

@@ -1,5 +1,8 @@
 import psycopg2.extras
 from configHelper import getConfig 
+import logging
+
+logger = logging.getLogger(__name__)
 
 class BaseDAO(object):
     """BaseDAO is a base class that encapsulates basic logic necessary to 
@@ -7,7 +10,9 @@ class BaseDAO(object):
     
     def __init__(self, database=None, host=None, user=None, password=None):
         
-        if database or host or user or password is None:
+        if database is None or host is None  or user is None  or password is None:
+            logger.info("Invalid arguments. Using configurations" +
+                         " from CONFIG file to connect to the database.")
             database = getConfig("database.name")
             host = getConfig("database.host")
             user = getConfig("database.user")
