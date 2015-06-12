@@ -5,17 +5,15 @@
 # You may use, copy, modify, or distribute under the terms of GPLv3 or newer.
 # No warranty.
 
-# Last updated: May 20, 2015 17:08 GMT-6
+# Last updated: Jun 12, 2015 10:00 GMT-6
 
 # Description: Alliance Backlog Export Module
 #              Exports data from PostgreSQL database to GitHub
 
-import logging
 import logging.config
-from pygithub3 import Github
-from milestoneDAO import MilestoneDAO
-from issueDAO import IssueDAO
-from issue import Issue, createAcceptIssue
+from .dao.milestoneDAO import MilestoneDAO
+from .dao.issueDAO import IssueDAO
+from .model.issue import createAcceptIssue
 
 def main():
     logging.config.fileConfig('logging.ini')
@@ -37,9 +35,15 @@ def main():
                 issueNumber = issue.create() 
                 if issueNumber is not None:
                     logger.info("Issue #%d [Title: \'%s\'] associated to Milestone #%d" % (issueNumber, issue.getTitle(), milestoneNumber))
+                else:
+                    exit_code = 1
             issue, issueNumber = createAcceptIssue(milestone.getNumber(), milestone.getRepo())
             if issueNumber is not None:
                 logger.info("Accept Issue #%d associated to Milestone #%d" % (issueNumber, milestoneNumber))
+            else:
+                exit_code = 1
+        else:
+            exit_code = 1
 
     # END TIME
     logger.info('EXPORT PROCESS ENDED WITH EXIT CODE: %i', exit_code)
