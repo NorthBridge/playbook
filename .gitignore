@@ -1,4 +1,4 @@
 *.[oa]
 *~
-backlog/CONFIG
-src/utils/CONFIG
+*CONFIG
+*.pyc
