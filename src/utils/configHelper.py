@@ -11,6 +11,3 @@ def getConfig(key):
         for i, p in re.findall(r'(\d+)|(\w+)', key):
             data = data.get(p or int(i), None)
         return data
-
-if __name__ == "__main__":
-    print 'token: %s' % getConfig('github.owner')
