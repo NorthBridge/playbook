@@ -1,5 +1,5 @@
 from pygithub3 import Github
-from configHelper import getConfig
+from ...utils.configHelper import getConfig
 import logging
 
 logger = logging.getLogger('playbook')

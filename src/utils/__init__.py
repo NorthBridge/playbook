@@ -1,1 +1,0 @@
-from configHelper import getConfig

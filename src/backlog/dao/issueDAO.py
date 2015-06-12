@@ -1,5 +1,5 @@
 from baseDAO import BaseDAO
-from issue import Issue
+from ..model.issue import Issue
 
 class IssueDAO(BaseDAO):
     

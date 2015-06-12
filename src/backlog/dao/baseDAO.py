@@ -1,5 +1,5 @@
 import psycopg2.extras
-from configHelper import getConfig 
+from ...utils.configHelper import getConfig
 import logging
 
 logger = logging.getLogger('playbook')

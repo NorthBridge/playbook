@@ -1,5 +1,5 @@
 from baseDAO import BaseDAO
-from milestone import Milestone
+from ..model.milestone import Milestone
 
 class MilestoneDAO(BaseDAO):
     

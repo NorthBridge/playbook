@@ -1,5 +1,5 @@
 from pygithub3 import Github
-from configHelper import getConfig 
+from ...utils.configHelper import getConfig
 import logging
 
 logger = logging.getLogger("playbook")
@@ -9,7 +9,7 @@ class Milestone(object):
     def __init__(self, id, title, state, desc, due_on, repo):
         #Importing here to avoid circular import issues 
         # (how to solve in a better way?).
-        from milestoneDAO import MilestoneDAO
+        from ..dao.milestoneDAO import MilestoneDAO
         
         token = getConfig("github.token")
         owner = getConfig("github.owner")
