@@ -22,13 +22,17 @@ class BaseDAO(object):
                             host=host, user=user,
                             password=password)
         
+        self.__cur = None
+        
     def __del__(self):
+        if self.__cur is not None:
+            self.__cur.close()
         self.getConnection().close()
         
     def execute(self, stmt, params):
-        cur = self.getConnection().cursor(cursor_factory=psycopg2.extras.DictCursor)
-        cur.execute(stmt, params)
-        return cur
+        self.__cur = self.getConnection().cursor(cursor_factory=psycopg2.extras.DictCursor)
+        self.__cur.execute(stmt, params)
+        return self.__cur
         
     def getConnection(self):
         return self.__conn
