@@ -4,12 +4,13 @@ import logging
 
 logger = logging.getLogger('playbook')
 
+ACCEPT_ISSUE_TITLE = 'Accept the story (milestone)'
+ 
 def createAcceptIssue(milestoneNumber, milestoneRepo):
-        title = 'Accept the story (milestone)'
         descr = ('The product owner should complete this task after all the '
                  'acceptance criteria are met for this story (milestone).')
         issue = Issue(None, 
-                      title, 
+                      ACCEPT_ISSUE_TITLE, 
                       descr, 
                       None, 
                       milestoneNumber, 
