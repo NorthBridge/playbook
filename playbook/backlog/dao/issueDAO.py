@@ -12,10 +12,11 @@ class IssueDAO(BaseDAO):
                 '       b.github_repo, t.name'
                 '  FROM acceptance_criteria ac, backlog b, team t'
                 ' WHERE b.github_number = %s'
+                '   AND b.github_repo = %s'
                 '   AND ac.backlog_id_fk = b.id'
                 '   AND b.team_id_fk = t.id;')
         mNumber = milestone.getNumber()
-        cur = super(IssueDAO, self).execute(stmt, (str(mNumber),))
+        cur = super(IssueDAO, self).execute(stmt, (str(mNumber), milestone.getRepo()))
         rows = cur.fetchall()
         cur.close()
         
