@@ -2,11 +2,16 @@ from .. import export
 import unittest
 from ..dao.baseDAO import BaseDAO
 from ..dao.issueDAO import IssueDAO
-from ..dao.milestoneDAO import MilestoneDAO
-from ..model.issue import Issue, ACCEPT_ISSUE_TITLE
+from ...utils.constants import (SELECTED_STATUS, IN_PROGRESS_STATUS, 
+                                ACCEPT_ISSUE_TITLE, ACCEPT_ISSUE_LABEL, 
+                                STATIC_LABEL_VALUE)
+from ..model.issue import Issue 
 from pygithub3 import Github
 from ...utils.configHelper import getConfig
 from datetime import datetime
+import logging
+
+logger = logging.getLogger('playbook')
 
 class ExportTest(unittest.TestCase):
     
@@ -56,7 +61,7 @@ class ExportTest(unittest.TestCase):
         cur = self.__bDAO.execute(status_id_check, (self.__backlogId,))
         row = cur.fetchone()
         
-        self.assertEqual(row['status_id_fk'], MilestoneDAO.IN_PROGRESS_STATUS)
+        self.assertEqual(row['status_id_fk'], IN_PROGRESS_STATUS)
         
         #check if all aspects of the script were successfully executed
         #retrieve milestone and its issues from github and verify data
@@ -87,14 +92,16 @@ class ExportTest(unittest.TestCase):
             self.assertEqual(len(ghIssues.all()), 2)
             
             for issue in ghIssues.all():
-                if (issue.title == ACCEPT_ISSUE_TITLE):
-                    pass
+                #TODO: Check if the accept issue label is the only one???
+                if any(label.name == ACCEPT_ISSUE_LABEL 
+                       for label in issue.labels):
+                    self.assertEqual(issue.title, ACCEPT_ISSUE_TITLE)
                 else:
                     self.assertEqual(issue.body, row['dac'])
                     self.assertEqual(str(issue.milestone.number), 
                                      row['github_number'])
                     self.assertTrue(len(issue.labels) == 2)
-                    self.assertTrue(any(label.name == IssueDAO.STATIC_LABEL_VALUE 
+                    self.assertTrue(any(label.name == STATIC_LABEL_VALUE 
                                             for label in issue.labels))
                     self.assertTrue(any(label.name == row['name'] 
                                             for label in issue.labels))
@@ -149,7 +156,7 @@ class ExportTest(unittest.TestCase):
         cur = self.__bDAO.execute(backlog_create_row,(ExportTest.MILESTONE_TITLE,
                                                       ExportTest.MILESTONE_DESC, 
                                                       self.__eventId,
-                                                      MilestoneDAO.SELECTED_STATUS,
+                                                      SELECTED_STATUS,
                                                       ExportTest.TEAM_ID,
                                                       ExportTest.REPO))
         self.__backlogId = cur.fetchone()[0]
