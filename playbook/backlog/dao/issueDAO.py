@@ -1,9 +1,8 @@
 from baseDAO import BaseDAO
 from ..model.issue import Issue
+from ...utils.constants import STATIC_LABEL_VALUE
 
 class IssueDAO(BaseDAO):
-    
-    STATIC_LABEL_VALUE = 'acceptance criteria'
     
     def getIssuesByMilestone(self, milestone):
         #TODO: Verify if this is the right way to check
@@ -20,13 +19,12 @@ class IssueDAO(BaseDAO):
         rows = cur.fetchall()
         cur.close()
         
-        issues = [Issue(row['id'], 
-                        row['title'], 
-                        row['descr'], 
-                        None, 
-                        row['github_number'], 
-                        [ IssueDAO.STATIC_LABEL_VALUE, row['name'] ], 
-                        row['github_repo'])
+        issues = [Issue(id=row['id'], 
+                        title=row['title'], 
+                        body=row['descr'], 
+                        milestoneNumber=row['github_number'], 
+                        labels=[ STATIC_LABEL_VALUE, row['name'] ], 
+                        repo=row['github_repo'])
                   for row in rows]
         
         return issues

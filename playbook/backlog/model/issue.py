@@ -1,41 +1,59 @@
 from pygithub3 import Github
 from ...utils.configHelper import getConfig
 import logging
+from ...utils.constants import ACCEPT_ISSUE_LABEL, ACCEPT_ISSUE_TITLE
 
 logger = logging.getLogger('playbook')
 
-ACCEPT_ISSUE_TITLE = 'Accept the story (milestone)'
+def build_issue_from_gh_payload(payload):
+    try:
+        title = payload['issue']['title']
+        body = payload['issue']['body']
+        assignee = payload['issue']['assignee']
+        milestoneNumber = payload['issue']['milestone']['number']
+        labels = payload['issue']['labels']
+        state = payload['issue']['state']
+        repo = payload['repository']['name']
+        
+        return Issue(title=title, 
+                     body=body, 
+                     assignee=assignee,
+                     milestoneNumber=milestoneNumber,
+                     labels=labels,
+                     state=state,
+                     repo=repo)
+    except KeyError:
+        logger.exception("Invalid key")
+        return None
  
 def createAcceptIssue(milestoneNumber, milestoneRepo):
         descr = ('The product owner should complete this task after all the '
                  'acceptance criteria are met for this story (milestone).')
-        issue = Issue(None, 
-                      ACCEPT_ISSUE_TITLE, 
-                      descr, 
-                      None, 
-                      milestoneNumber, 
-                      None, 
-                      milestoneRepo)
-        logger.info("Creating Accept Issue related to milestone #%d" +
+        issue = Issue(title=ACCEPT_ISSUE_TITLE, 
+                      body=descr, 
+                      milestoneNumber=milestoneNumber, 
+                      labels=[ ACCEPT_ISSUE_LABEL ], 
+                      repo=milestoneRepo)
+        logger.info("Creating Accept Issue related to milestone #%s" +
                     " into repository %s", 
                     milestoneNumber, milestoneRepo)
         return (issue, issue.create())
-        
+      
 class Issue(object):
     
-    def __init__(self, id, title, body, assignee, milestoneNumber, labels, repo):
+    def __init__(self, **kwargs):
+        self.__id = kwargs.get('id', None)
+        self.__title = kwargs.get('title', None)
+        self.__body = kwargs.get('body', None)
+        self.__assignee = kwargs.get('assignee', None)
+        self.__milestoneNumber = kwargs.get('milestoneNumber', None)
+        self.__labels = kwargs.get('labels', None)
+        self.__state = kwargs.get('state', None)
+        self.__repo = kwargs.get('repo', None)
         
         token = getConfig("github.token")
         owner = getConfig("github.owner")
-        
-        self.__gh = Github(token=token, user=owner, repo=repo)
-        self.__id = id
-        self.__title = title
-        self.__body = body
-        self.__assignee = assignee
-        self.__milestoneNumber = milestoneNumber
-        self.__labels = labels
-        self.__repo = repo
+        self.__gh = Github(token=token, user=owner, repo=self.getRepo())
         
     def create(self):
         if self.__title is None:
@@ -83,6 +101,12 @@ class Issue(object):
         
     def getLabels(self):
         return self.__labels
+    
+    def getState(self):
+        return self.__state
+
+    def getRepo(self):
+        return self.__repo
 
     def getGitHub(self):
         return self.__gh
