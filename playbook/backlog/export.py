@@ -29,17 +29,17 @@ def main():
     for milestone in mDao.getMilestones():
         milestoneNumber = milestone.create()
         if milestoneNumber is not None:
-            logger.info("Milestone created with #%d [Title: \'%s\']" % (milestoneNumber, milestone.getTitle()))
+            logger.info("Milestone created with #%s [Title: \'%s\']" % (milestoneNumber, milestone.getTitle()))
             logger.info("Creating associated issues:")
             for issue in iDao.getIssuesByMilestone(milestone):
                 issueNumber = issue.create() 
                 if issueNumber is not None:
-                    logger.info("Issue #%d [Title: \'%s\'] associated to Milestone #%d" % (issueNumber, issue.getTitle(), milestoneNumber))
+                    logger.info("Issue #%d [Title: \'%s\'] associated to Milestone #%s" % (issueNumber, issue.getTitle(), milestoneNumber))
                 else:
                     exit_code = 1
             issue, issueNumber = createAcceptIssue(milestone.getNumber(), milestone.getRepo())
             if issueNumber is not None:
-                logger.info("Accept Issue #%d associated to Milestone #%d" % (issueNumber, milestoneNumber))
+                logger.info("Accept Issue #%d associated to Milestone #%s" % (issueNumber, milestoneNumber))
             else:
                 exit_code = 1
         else:
