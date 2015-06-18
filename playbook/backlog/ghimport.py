@@ -13,44 +13,42 @@ from .model.milestone import build_milestone_from_gh_payload, Milestone
 from twisted.web.xmlrpc import payloadTemplate
 import logging.config
 
-#based on https://github.com/razius/github-webhook-handler/blob/master/index.py
+#based on:
+# https://github.com/razius/github-webhook-handler/blob/master/index.py
+# https://github.com/carlos-jenkins/python-github-webhooks/blob/master/webhooks.py
 
-@application.route("/githubimport/", methods = ['GET', 'POST'])
+@application.route("/githubimport/", methods = ['POST'])
 def index():
     logging.config.fileConfig('logging.ini')
     logger = logging.getLogger("playbook")
-
-    # START TIME
-    logger.info('IMPORT PROCESS STARTED')
-    
     exit_code = 0
     
-    if request.method != 'POST':
-        abort(501)
-    
+    # START TIME
+    logger.info('IMPORT PROCESS STARTED')
+
 #     verify_source(request)
     verify_secret(request)
     event = request.headers.get('X-GitHub-Event', None)
+    response = None
     if event == 'issues':
         try:
             payload = loads(request.data)
-            import_information(payload)
-        except:
-            logger.exception("Error!!!!")
-            abort(400)
-             
-    #Return information to store on github
+            response = import_information(payload)
+        except Exception, error:
+            response = repr(error)
+    else:
+        response = 'Untreatable event: \'%s\'' % event
     logger.info('IMPORT PROCESS ENDED WITH EXIT CODE: %i', exit_code)
-    return '200'
+    return response
 
 def import_information(payload):
     action = payload.get('action', None)
     if action is not None:
         issue = build_issue_from_gh_payload(payload)
         milestone = build_milestone_from_gh_payload(payload)
-        milestone.updateStatus(issue, action)
+        return milestone.updateStatus(issue, action)
     else:
-        logger.info("Invalid action \'%s\'", action)
+        raise RuntimeError("action not defined in payload. Ignoring request...")
     
 def verify_secret(request):
     secret = getConfig('github.webhooks.secret')
@@ -78,3 +76,4 @@ def start_server():
         
 if __name__ == '__main__':
     start_server()
+    
