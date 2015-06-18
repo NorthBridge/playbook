@@ -28,14 +28,28 @@ def main():
     iDao = IssueDAO()
     try:
         for milestone in mDao.getMilestones():
-            milestoneNumber = milestone.create()
-            logger.info("Milestone created with #%s [Title: \'%s\']" % (milestoneNumber, milestone.getTitle()))
-            logger.info("Creating associated issues:")
-            for issue in iDao.getIssuesByMilestone(milestone):
-                issueNumber = issue.create() 
-                logger.info("Issue #%d [Title: \'%s\'] associated to Milestone #%s" % (issueNumber, issue.getTitle(), milestoneNumber))
-            issue, issueNumber = createAcceptIssue(milestone.getNumber(), milestone.getRepo())
-            logger.info("Accept Issue #%d associated to Milestone #%s" % (issueNumber, milestoneNumber))
+            try:
+                milestoneNumber = milestone.create()
+                logger.info("Creating associated issues:")
+            except:
+                #If something wrong happened, it is already logged and we do not
+                # continue exporting issues related to this milestone. But we
+                # try to export following milestones/issues if they exists.
+                exit_code = 1
+            else:
+                for issue in iDao.getIssuesByMilestone(milestone):
+                    try:
+                        issueNumber = issue.create() 
+                    except:
+                        #Same thing here, if something goes wrong when exporting
+                        # the current issue, it is already logged and we continue
+                        # with the next one.
+                        exit_code = 1
+                try:
+                    issue, issueNumber = createAcceptIssue(milestone.getNumber(), 
+                                                           milestone.getRepo())
+                except:
+                    exit_code = 1
     except:
         logger.exception("Exception exporting milestones to github:")
         exit_code = 1
