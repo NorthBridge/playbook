@@ -26,24 +26,19 @@ def main():
     
     mDao = MilestoneDAO()
     iDao = IssueDAO()
-    for milestone in mDao.getMilestones():
-        milestoneNumber = milestone.create()
-        if milestoneNumber is not None:
+    try:
+        for milestone in mDao.getMilestones():
+            milestoneNumber = milestone.create()
             logger.info("Milestone created with #%s [Title: \'%s\']" % (milestoneNumber, milestone.getTitle()))
             logger.info("Creating associated issues:")
             for issue in iDao.getIssuesByMilestone(milestone):
                 issueNumber = issue.create() 
-                if issueNumber is not None:
-                    logger.info("Issue #%d [Title: \'%s\'] associated to Milestone #%s" % (issueNumber, issue.getTitle(), milestoneNumber))
-                else:
-                    exit_code = 1
+                logger.info("Issue #%d [Title: \'%s\'] associated to Milestone #%s" % (issueNumber, issue.getTitle(), milestoneNumber))
             issue, issueNumber = createAcceptIssue(milestone.getNumber(), milestone.getRepo())
-            if issueNumber is not None:
-                logger.info("Accept Issue #%d associated to Milestone #%s" % (issueNumber, milestoneNumber))
-            else:
-                exit_code = 1
-        else:
-            exit_code = 1
+            logger.info("Accept Issue #%d associated to Milestone #%s" % (issueNumber, milestoneNumber))
+    except:
+        logger.exception("Exception exporting milestones to github:")
+        exit_code = 1
 
     # END TIME
     logger.info('EXPORT PROCESS ENDED WITH EXIT CODE: %i', exit_code)

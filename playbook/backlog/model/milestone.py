@@ -21,9 +21,9 @@ def build_milestone_from_gh_payload(payload):
                          due_on=due_on, 
                          number=number, 
                          repo=repo)
-    except KeyError:
-        logger.exception("Invalid key")
-        return None
+    except KeyError, error:
+        logger.exception("Trying to get value from payload using invalid key:")
+        raise
     
 class Milestone(object):
     
@@ -46,66 +46,71 @@ class Milestone(object):
         
     def create(self):
         data = self.create_data()
-        if data is not None:
-            try:
-                ghMilestone = self.getGitHub().issues.milestones.create(data)
-                logger.info("Milestone exported to GitHub: %s", data)
-                self.setNumber(str(ghMilestone.number))
-                self.getMilestoneDao().updateMilestoneNumber(self)
-                logger.info("Backlog table [id=%d] updated with status = %d and" +
-                            " github_number = %s", 
-                             self.getId(), 
-                             IN_PROGRESS_STATUS, 
-                             self.getNumber())
-                return self.getNumber()
-            except Exception:
-                logger.exception("Error exporting milestone to GitHub: %s", data)
-                return None
+        try:
+            ghMilestone = self.getGitHub().issues.milestones.create(data)
+            logger.info("Milestone exported to GitHub: %s", data)
+            self.setNumber(str(ghMilestone.number))
+            self.getMilestoneDao().updateMilestoneNumber(self)
+            logger.info("Backlog table [id=%d] updated with status = %d and" +
+                        " github_number = %s", 
+                        self.getId(), 
+                        IN_PROGRESS_STATUS, 
+                        self.getNumber())
+            return self.getNumber()
+        except Exception, error:
+            logger.exception("Error exporting milestone to GitHub: %s", data)
+            raise
     
     def updateStatus(self, issue, action):
+        message = None
         is_acceptance_issue = any(label['name'] == ACCEPT_ISSUE_LABEL 
                                   for label in issue.getLabels())
         
+        if not is_acceptance_issue:
+            message = ("Trying to update a milestone using an issue that"
+                       " does not contain the expected label (%s) or is not"
+                       " in the correct state. Ignoring...") % ACCEPT_ISSUE_LABEL
+            logger.debug(message)
+            return message
+
         new_milestone_state = None
         new_milestone_status = None
         
-        if not is_acceptance_issue:
-            logger.debug("Trying to update a milestone using an issue that" +
-                         " does not contain the expected label (%s) or is not" +
-                         " in the correct state. Ignoring...", 
-                         ACCEPT_ISSUE_LABEL)
-            return
-
         try:
-            new_milestone_state = ACTION.get(action, {}).get('state', None)
-            new_milestone_status = ACTION.get(action, {}).get('status', None)
-            
+            new_milestone_state = ACTION[action]['state']
+            new_milestone_status = ACTION[action]['status']
             self.__state = new_milestone_state
             data = self.create_data()
-            if data is not None:
-                #Persist this milestone state into database
-                self.getMilestoneDao().updateMilestoneStatus(self, 
-                                                             new_milestone_status)
-                #Update this milestone state in github
-                self.getGitHub().issues.milestones.update(self.getNumber(), data)
-                logger.info("Milestone #%s from \'%s\' repo updated to" + 
-                            " status \'%s\' using issue \'%s\'",
-                            self.getNumber(), 
-                            self.getRepo(), 
-                            new_milestone_state,
-                            issue.getTitle())
-        except:
+            #Persist this milestone state into database
+            self.getMilestoneDao().updateMilestoneStatus(self, 
+                                                         new_milestone_status)
+            #Update this milestone state in github
+            self.getGitHub().issues.milestones.update(self.getNumber(), data)
+            message = ("Milestone #%s from \'%s\' repo updated to" 
+                       " status \'%s\' using issue \'%s\'") % (self.getNumber(), 
+                                                               self.getRepo(), 
+                                                               new_milestone_state,
+                                                               issue.getTitle())
+            logger.info(message)
+            return message
+        except KeyError, error:
+            logger.error("Invalid action passed as argument: \'%s\'." +
+                             " This request is being ignored...",
+                             action)
+            raise
+        except Exception, error:
             logger.exception("Error updating milestone #%s from \'%s\'" +
                              " repo using issue \'%s\'",
                              self.getNumber(), 
                              self.getRepo(), 
                              issue.getTitle())
+            raise
             
     def create_data(self):
         if self.__title is None:
             logger.error("Title is a required field. This milestone will not" +
                          " be exported to GitHub: %s", self.__dict__)
-            return None
+            raise RuntimeError('\'Title\' is required to create an issue')
 
         data = { 'title': self.getTitle() }
             

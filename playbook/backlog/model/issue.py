@@ -22,9 +22,9 @@ def build_issue_from_gh_payload(payload):
                      labels=labels,
                      state=state,
                      repo=repo)
-    except KeyError:
-        logger.exception("Invalid key")
-        return None
+    except KeyError, error:
+        logger.exception("Trying to get value from payload using invalid key:")
+        raise
  
 def createAcceptIssue(milestoneNumber, milestoneRepo):
         descr = ('The product owner should complete this task after all the '
@@ -56,11 +56,20 @@ class Issue(object):
         self.__gh = Github(token=token, user=owner, repo=self.getRepo())
         
     def create(self):
+        data = self.create_data()            
+        try:
+            ghIssue = self.__gh.issues.create(data)
+            logger.info("Issue exported to GitHub: %s", data)
+            return ghIssue.number
+        except Exception, error:
+            logger.exception("Error exporting issue to GitHub: %s", data)
+            raise
+    
+    def create_data(self):
         if self.__title is None:
             logger.error("Title is a required field. This issue will not" +
                          " be exported to GitHub: %s", self.__dict__)
-            #TODO: throw exception!?!?!?!
-            return
+            raise RuntimeError('\'Title\' is required to create an issue')
         
         data = { 'title': self.__title }
             
@@ -75,15 +84,9 @@ class Issue(object):
             
         if self.__labels is not None:
             data['labels'] = self.__labels
-            
-        try:
-            ghIssue = self.__gh.issues.create(data)
-            logger.info("Issue exported to GitHub: %s", data)
-            return ghIssue.number
-        except Exception:
-            logger.exception("Error exporting issue to GitHub: %s", data)
-            return None
-
+        
+        return data
+        
     def getId(self):
         return self.__id
                 
