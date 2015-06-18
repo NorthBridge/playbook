@@ -150,7 +150,7 @@ class ExportTest(unittest.TestCase):
         cur = self.__bDAO.execute(event_create_row, (ExportTest.EVENT_NAME,
                                                      ExportTest.SCHEDULE_ID,
                                                      ExportTest.MILESTONE_START_DATE,
-                                                     ExportTest.MILESTONE_DUE_ON,))
+                                                     ExportTest.MILESTONE_DUE_ON))
         self.__eventId = cur.fetchone()[0]
         #Insert into backlog table
         cur = self.__bDAO.execute(backlog_create_row,(ExportTest.MILESTONE_TITLE,

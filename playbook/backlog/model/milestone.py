@@ -58,7 +58,11 @@ class Milestone(object):
                         self.getNumber())
             return self.getNumber()
         except Exception, error:
-            logger.exception("Error exporting milestone to GitHub: %s", data)
+            logger.exception("Error exporting milestone to GitHub:" +
+                             "\n\tRepo: %s" +
+                             "\n\tData: %s", 
+                             self.getRepo(),
+                             data)
             raise
     
     def updateStatus(self, issue, action):
