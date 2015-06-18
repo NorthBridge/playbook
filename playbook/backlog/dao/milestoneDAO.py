@@ -11,11 +11,11 @@ class MilestoneDAO(BaseDAO):
         super(MilestoneDAO, self).__init__()
     
     def getMilestones(self):
-        stmt=('SELECT b.id, b.story_title, b.story_descr, e.end_dttm,'
-              '       b.github_repo' 
-              '  FROM event e, backlog b'
-              ' WHERE b.sprint_id_fk = e.id'
-              '   AND b.status_id_fk = %s;')
+        stmt="""SELECT b.id, b.story_title, b.story_descr, e.end_dttm,
+                       b.github_repo
+                  FROM event e, backlog b
+                 WHERE b.sprint_id_fk = e.id
+                   AND b.status_id_fk = %s;"""
         cur = super(MilestoneDAO, self).execute(stmt, 
                                                 (SELECTED_STATUS,))
         rows = cur.fetchall()
