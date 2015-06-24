@@ -27,7 +27,7 @@ def index():
     logger.info('IMPORT PROCESS STARTED')
 
 #     verify_source(request)
-    verify_secret(request)
+    verify_signature(request)
     event = request.headers.get('X-GitHub-Event', None)
     response = None
     if event == 'issues':
@@ -50,16 +50,20 @@ def import_information(payload):
     else:
         raise RuntimeError("action not defined in payload. Ignoring request...")
     
-def verify_secret(request):
+def verify_signature(request):
     secret = getConfig('github.webhooks.secret')
     if secret:
         sha_name, signature = request.headers.get('X-Hub-Signature').split('=')
         if sha_name != 'sha1':
+            logger.error("Only sha1 hash algorithm is available. Ignoring" +
+                         " request...")
             abort(501)
 
         # HMAC requires the key to be bytes, but data is string
         mac = hmac.new(str(secret), msg=request.data, digestmod=sha1)
         if not hmac.compare_digest(str(mac.hexdigest()), str(signature)):
+            logger.warning("X-Hub-Signature does not match. Ignoring" +
+                           " request...")
             abort(403)
     
 def verify_source(request):

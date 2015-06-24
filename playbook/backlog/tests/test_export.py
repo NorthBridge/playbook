@@ -9,9 +9,6 @@ from ..model.issue import Issue
 from pygithub3 import Github
 from ...utils.configHelper import getConfig
 from datetime import datetime
-import logging
-
-logger = logging.getLogger('playbook')
 
 class ExportTest(unittest.TestCase):
     
