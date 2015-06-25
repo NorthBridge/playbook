@@ -1,7 +1,7 @@
 from pygithub3 import Github
 from ...utils.configHelper import getConfig
 from .issue import ACCEPT_ISSUE_LABEL
-from ...utils.constants import IN_PROGRESS_STATUS, ACCEPTED_STATUS, ACTION
+from ...utils.constants import IN_PROGRESS_STATUS, ACCEPTED_STATUS, GH_ACTION
 import logging
 
 logger = logging.getLogger("playbook")
@@ -24,6 +24,13 @@ def build_milestone_from_gh_payload(payload):
     except KeyError, error:
         logger.exception("Trying to get value from payload using invalid key:")
         raise
+    
+def map_db_status_to_gh_state(db_status):
+    for (key, value) in GH_ACTION.items():
+        if value.get('db_status') == db_status:
+            return value.get('gh_state')
+    else:
+        raise Exception('status_id_fk does not exist into GH_ACTION dict: %d' % db_status)
     
 class Milestone(object):
     
@@ -81,8 +88,8 @@ class Milestone(object):
         new_milestone_status = None
         
         try:
-            new_milestone_state = ACTION[action]['state']
-            new_milestone_status = ACTION[action]['status']
+            new_milestone_state = GH_ACTION[action]['gh_state']
+            new_milestone_status = GH_ACTION[action]['db_status']
             self.__state = new_milestone_state
             data = self.create_data()
             #Persist this milestone state into database
