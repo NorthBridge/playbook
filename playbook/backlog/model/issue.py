@@ -78,6 +78,9 @@ class Issue(object):
             
         if self.__assignee is not None:
             data['assignee'] = self.__assignee
+        
+        if self.__state is not None:
+            data['state'] = self.__state
             
         if self.__milestoneNumber is not None:
             data['milestone'] = self.__milestoneNumber
