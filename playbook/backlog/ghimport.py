@@ -10,7 +10,6 @@ from json import loads, dumps
 import requests
 from .model.issue import build_issue_from_gh_payload
 from .model.milestone import build_milestone_from_gh_payload, Milestone
-from twisted.web.xmlrpc import payloadTemplate
 import logging.config
 
 #based on:
