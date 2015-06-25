@@ -17,4 +17,8 @@
     You should have received a copy of the GNU General Public License
     along with playbook (see COPYING).  If not, see <http://www.gnu.org/licenses/>.
 
-##This is where we keep track of all the collaborative details that help us run smoothly.
+This project manages the interactions between Northbridge agile team processes and GitHub issues tracking.
+
+There are two major components to this project, export and import. Those are represented as the yellow portions of this diagram
+
+![Project Diagram](http://northbridgetech.org/images/alliance1.jpg)
