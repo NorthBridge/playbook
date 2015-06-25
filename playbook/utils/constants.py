@@ -6,12 +6,19 @@ SELECTED_STATUS = 14
 IN_PROGRESS_STATUS = 15
 ACCEPTED_STATUS = 16
 
-ACTION = {'closed': {
-                     'status': ACCEPTED_STATUS,
-                     'state': 'closed'
-                     },
-          'reopened': {
-                       'status': IN_PROGRESS_STATUS,
-                       'state': 'open'
-                       }
-          }
+GH_CLOSED_STATE='closed'
+GH_OPEN_STATE='open'
+
+GH_CLOSED_ACTION='closed'
+GH_REOPENED_ACTION='reopened'
+
+GH_ACTION = {
+    GH_CLOSED_ACTION: {
+        'db_status': ACCEPTED_STATUS,
+        'gh_state': GH_CLOSED_STATE
+    },
+    GH_REOPENED_ACTION: {
+        'db_status': IN_PROGRESS_STATUS,
+        'gh_state': GH_OPEN_STATE
+    }
+}
