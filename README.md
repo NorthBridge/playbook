@@ -10,4 +10,4 @@ Export: When invoked, export all Backlog User Stories in state "Selected" from t
 
 Import: When invoked, update a Backlog User Story to Accepted. This process will respond to a GitHub Issues Webhook.
 
-![Project Diagram](http://northbridgetech.org/images/alliance1.jpg)
+![Project Diagram](http://northbridgetech.org/images/alliance2.jpg)
