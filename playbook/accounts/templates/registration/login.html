@@ -1,0 +1,29 @@
+{% extends "core/base.html" %}
+
+{% block head %}
+<script type="text/javascript" language="javascript">
+  $(document).ready(function(){
+    $('#username').focus();
+  });
+</script>
+{% endblock %}
+
+{% block content %}
+  {% if form.errors %}
+    <p class="error">Sorry, that's not a valid username or password.</p>
+  {% endif %}
+
+  <div class="login-box">
+    <form method="post" >
+      {% csrf_token %}
+      <label for="username">User name:</label>
+      <input type="text" name="username" value="" id="username">
+      <p/>
+      <label for="password">Password:</label>
+      <input type="password" name="password" value="" id="password">
+      <p/>
+      <input id="login-button" type="submit" value="login" />
+      <input type="hidden" name="next" value="{{ next|escape }}" />
+    </form>
+  </div>
+{% endblock %}

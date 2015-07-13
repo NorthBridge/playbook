@@ -13,3 +13,12 @@
 # Python egg metadata, regenerated from source files by setuptools.
 /*.egg-info
 /*.egg
+
+#sublime files
+*sublime*
+
+#debug tool
+*debug_toolbar*
+
+#log files
+*.log

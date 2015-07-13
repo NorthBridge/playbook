@@ -1,0 +1,10 @@
+{% for f_form in acceptance_criteria.forms %}
+<tr id="{{ f_form.prefix }}-row">
+    <td>
+        {% for fld in f_form.hidden_fields %}{{ fld }}{% endfor %}
+        {% if f_form.instance.id %}{{ f_form.DELETE }}{% endif %}
+        {{ f_form.title }}
+    </td>
+    <td>{{ f_form.descr }}</td>
+</tr>
+{% endfor %}
