@@ -1,0 +1,5 @@
+Django==1.8.2
+ipaddress==1.0.7
+psycopg2==2.6.1
+pygithub3==0.5.1
+requests==2.7.0
