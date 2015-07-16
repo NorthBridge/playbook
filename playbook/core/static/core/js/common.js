@@ -26,9 +26,24 @@ function showMessage(message) {
     div.textContent = message;
     $("#messages").show();
     setTimeout(function() { 
-        $("#messages").content = ''; 
-        $("#messages").hide(); 
+        div.textContent = ''; 
     }, 5000);
+}
+
+function showErrors(errors) {
+    var string = "";
+    er = JSON.parse(errors);
+    for (field in er) { 
+        for (error in er[field]) { 
+            fieldObj = er[field];
+            for (el in fieldObj) {
+                if (field != "__all__")
+                    string += field + ": "
+                string += fieldObj[el].message + "\n";
+            }
+        }
+    }
+    showMessage(string);
 }
 
 var csrftoken = getCookie('csrftoken');

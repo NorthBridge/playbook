@@ -67,6 +67,10 @@ th, td {
         width: 100%;
 }
 
+.acc-cri-td {
+    vertical-align: top;
+}
+
 #messages {
     position: fixed;
     top: 1em;
@@ -119,4 +123,11 @@ a {
 
 a:hover {
     color: #4b1212;
+}
+
+.delete-row {
+    margin-left:5px;
+    position:relative;
+    display: inline;
+    float:right;
 }
