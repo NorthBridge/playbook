@@ -1,251 +1,251 @@
 {% extends "core/base.html" %}
 
 {% block head %}
-<style type="text/css">
-    .delete-row {
-        margin-left:5px;
-    }
-</style>
-<script type="text/javascript" language="javascript">
-    $(document).ready(function(){
-        $('table[id^=acc-cri-tbl-]').each(function() {
-            table_id = this.id;
-            formCssClass = 'dinamic-' + table_id;
-
-            $('#' + table_id + ' tbody tr').formset({
-                prefix: getFormsetPrefix(this.parentNode),
-                formCssClass: formCssClass
-            })
-        });
-        
-        $("#backlog-table > tbody > tr:odd")
-        .each(function (i) {
-            $(this).addClass("odd");
-        });
-
-        $("#backlog-table > tbody > tr:not(.odd)")
-        .each(function (i) {
-            $(this).hide();
-        });
-
-        $("#backlog-table > tbody > tr:first-child")
-        .each(function (i) {
-            $(this).show();
-        });
-        
-        $("#backlog-table tr.odd").click(function(){
-            $(this).next("tr").toggle();
-            $(this).find(".arrow").toggleClass("up");
-        });
-
-        $("[name='action-update-estimate']").click( function(e) { 
-            e.preventDefault();
-            e.stopPropagation();
-        });
-
-        $("[name='action-save']").click( function(e) { 
-            e.preventDefault();
-        });
-
-        $("[name='action-select-sprint']").click( function(e) { 
-            e.preventDefault();
-        });
-
-        $("[name='estimate-estimate']").click( function(e) { 
-                e.stopPropagation();
-        });
-        
-        $("#messages").hide();
-    });
-
-    function getFormsetPrefix(form) {
-        return $(form).find(':input[id=formset-prefix]').attr('value');
-    }
-
-    function updateSprint(form) {
-        var data = $(form).serializeArray();
-        data.push({ name: 'action-select-sprint', value: true });
-        var posting = $.post("/playbook/backlog/", $.param(data));
-        posting.done(function (data) {
-            if (data.success) {
-                newStatus = data.status;
-                tr_id = $(form).closest('tr').attr('id');
-                backlog_id = /\d+/.exec(tr_id);
-                $('#status-' + backlog_id).html(data.status);
-                $('#sprint-name-' + backlog_id).html(data.sprintName);
-                showMessage("Sprint successfuly updated.");
-            } else
-                showMessage(data.errors);
-        });
-        posting.fail(function (xhr) {
-            if (xhr.status == '401') {
-                redirectToLogin($(location).attr('pathname'));
-            }
-        });
-    }
-
-    function updateEstimate(form) {
-        var data = $(form).serializeArray();
-        data.push({ name: 'action-update-estimate', value: true });
-        var posting = $.post("/playbook/backlog/", $.param(data));
-        posting.done(function (data) {
-            if (data.success)
-                showMessage("Estimate successfuly updated.");
-            else
-                showMessage(data.errors);
-        });
-        posting.fail(function (xhr) {
-            if (xhr.status == '401') {
-                redirectToLogin($(location).attr('pathname'));
-            }
-        });
-    }
-
-    function updateBacklog(form) {
-        var data = $(form).serializeArray();
-        data.push({ name: 'action-save', value: true });
-        var posting = $.post("/playbook/backlog/", $.param(data))
-        posting.done( function (data) {
-            if (data.success) {
-                $(form).find('tbody').empty().append(data.html);
-                table_id = $(form).children('table')[0].id;
-                p_mgt_id = table_id.replace("tbl", "mgt");
-                form.querySelector("#" + p_mgt_id).innerHTML = data.mgt_fields;
+    <script type="text/javascript" language="javascript">
+        $(document).ready(function(){
+            $('table[id^=acc-cri-tbl-]').each(function() {
+                table_id = this.id;
                 formCssClass = 'dinamic-' + table_id;
+
                 $('#' + table_id + ' tbody tr').formset({
-                    prefix: getFormsetPrefix(form),
-                    formCssClass: formCssClass
+                    prefix: getFormsetPrefix(this.parentNode),
+                    formCssClass: formCssClass,
+                    addText: "Add Acceptance Criterion",
+                    deleteText: "Remove Criterion"
                 })
-                showMessage("Backlog successfuly updated.");
-            } else
-                showMessage(data.errors);
+            });
+            
+            $("#backlog-table > tbody > tr:odd")
+            .each(function (i) {
+                $(this).addClass("odd");
+            });
+
+            $("#backlog-table > tbody > tr:not(.odd)")
+            .each(function (i) {
+                $(this).hide();
+            });
+
+            $("#backlog-table > tbody > tr:first-child")
+            .each(function (i) {
+                $(this).show();
+            });
+            
+            $("#backlog-table tr.odd").click(function(){
+                $(this).next("tr").toggle();
+                $(this).find(".arrow").toggleClass("up");
+            });
+
+            $("[name='action-update-estimate']").click( function(e) { 
+                e.preventDefault();
+                e.stopPropagation();
+            });
+
+            $("[name='action-save']").click( function(e) { 
+                e.preventDefault();
+            });
+
+            $("[name='action-select-sprint']").click( function(e) { 
+                e.preventDefault();
+            });
+
+            $("[name='estimate-estimate']").click( function(e) { 
+                    e.stopPropagation();
+            });
+
+            $("#messages").hide();
         });
-        posting.fail(function (xhr) {
-            if (xhr.status == '401') {
-                redirectToLogin($(location).attr('pathname'));
-            }
-        });
-    }
-</script>
+        
+        setInterval(function() {checkUpdates();}, 30000);
+
+        function getFormsetPrefix(form) {
+            return $(form).find(':input[id=formset-prefix]').attr('value');
+        }
+
+        function updateDttm(backlog_id, newUpdateDttm) {
+            $("#update_dttm-" + backlog_id).html(newUpdateDttm);
+        }
+
+        function checkUpdates() {
+            var jsonData = { backlogs: [] };
+            $("[id*=backlog-row-]").each(
+                function(index, tr) {
+                    trId = $(tr).attr('id');
+                    backlogId = /\d+/.exec(trId).toString();
+                    lastUpdated = $("#update_dttm-" + backlogId).html();
+                    jsonData.backlogs.push({
+                        "id": backlogId,
+                        "lastUpdated": lastUpdated
+                    });
+            });
+            var posting = $.post("/playbook/backlog/checkBacklogs", JSON.stringify(jsonData));
+            posting.done(function (data) {
+                if (data.outdated) {
+                    showMessage('This backlog table is outdated. Please refresh your page.');
+                };
+            });
+            posting.fail(function (xhr) {
+                if (xhr.status == '401') {
+                    redirectToLogin($(location).attr('pathname'));
+                }
+            });
+        }
+
+        function updateSprint(form) {
+            var data = $(form).serializeArray();
+            data.push({ name: 'action-select-sprint', value: true });
+            var posting = $.post("/playbook/backlog/", $.param(data));
+            posting.done(function (data) {
+                if (data.success) {
+                    newStatus = data.status;
+                    tr_id = $(form).closest('tr').attr('id');
+                    backlog_id = /\d+/.exec(tr_id).toString();
+                    $('#status-' + backlog_id).html(data.status);
+                    $('#sprint-name-' + backlog_id).html(data.sprintName);
+                    updateDttm(backlog_id, data.update_dttm);
+                    showMessage("Sprint successfuly updated.");
+                } else
+                    showErrors(data.errors);
+            });
+            posting.fail(function (xhr) {
+                if (xhr.status == '401') {
+                    redirectToLogin($(location).attr('pathname'));
+                }
+            });
+        }
+
+        function updateEstimate(form) {
+            var data = $(form).serializeArray();
+            data.push({ name: 'action-update-estimate', value: true });
+            var posting = $.post("/playbook/backlog/", $.param(data));
+            posting.done(function (data) {
+                if (data.success) {
+                    backlog_id = $("#id_estimate-backlog_id").attr('value');
+                    updateDttm(backlog_id, data.update_dttm);
+                    showMessage("Estimate successfuly updated.");
+                } else
+                    showErrors(data.errors);
+            });
+            posting.fail(function (xhr) {
+                if (xhr.status == '401') {
+                    redirectToLogin($(location).attr('pathname'));
+                }
+            });
+        }
+
+        function updateBacklog(form) {
+            var data = $(form).serializeArray();
+            data.push({ name: 'action-save', value: true });
+            var posting = $.post("/playbook/backlog/", $.param(data))
+            posting.done( function (data) {
+                if (data.success) {
+                    $(form).find('tbody').empty().append(data.html);
+                    table_id = $(form).children('table')[0].id;
+                    p_mgt_id = table_id.replace("tbl", "mgt");
+                    form.querySelector("#" + p_mgt_id).innerHTML = data.mgt_fields;
+                    formCssClass = 'dinamic-' + table_id;
+                    $('#' + table_id + ' tbody tr').formset({
+                        prefix: getFormsetPrefix(form),
+                        formCssClass: formCssClass,
+                        addText: "Add Acceptance Criterion",
+                        deleteText: "Remove Criterion"
+                    })
+                    backlog_id = $(form).find("#id_backlog-id").attr('value');
+                    updateDttm(backlog_id, data.update_dttm);
+                    showMessage("Backlog successfuly updated.");
+                } else
+                    showErrors(data.errors);
+            });
+            posting.fail(function (xhr) {
+                if (xhr.status == '401') {
+                    redirectToLogin($(location).attr('pathname'));
+                }
+            });
+        }
+    </script>
 {%endblock%}
 
 {% block header %}
-<div>
-    <h1 style="text-align: center;">List of Backlogs</h1>
-</div>
+    <div>
+        <h1 style="text-align: center;">List of Backlogs</h1>
+    </div>
 {% endblock %}
 
 {% block content %}
-{% if backlogs %}
-<table id="backlog-table">
-  <tr>
-    <th>Priority</th>
-    <th>Project</th>    
-    <th>Module</th>
-    <th>Story Title</th>
-    <th>Status</th>
-    <th>Selected Sprint</th>
-    <th>Estimate</th>
-  </tr>
-  {% for backlog, form_estimate, form, formset in backlogs %}
-    <tr id="backlog-row-{{ backlog.id }}">
-        <td>{{ backlog.priority }}</td>
-        <td>{{ backlog.project.name }}</td>
-        <td>{{ backlog.module }}</td>
-        <td>{{ backlog.story_title }}</td>
-        <td id="status-{{ backlog.id }}">{{ backlog.status.name }}</td>
-        <td id="sprint-name-{{ backlog.id }}">{{ backlog.sprint }}</td>
-        <td>
-            <form method="post">
-                {% csrf_token %}
-                {% for field in form_estimate.hidden_fields %}{{ field }}{% endfor %}
-                {{ form_estimate.estimate }}
-                <button onclick="updateEstimate(this.form);" 
-                        name="action-update-estimate" 
-                        value="update-estimate">Update</button>
-            </form>
-        </td>
-    </tr>
-    <tr id="backlog-detail-row-{{ backlog.id }}">
-        <td colspan="7">
-            {% if form.read_only %}
-                {% for field in form.visible_fields %}
-                    {% if field.name != 'sprint' %} 
-                        <p class="input-field">
-                            {{ field.label_tag }}
-                            {{ field }}
-                        </p>
-                    {% endif %}
-                {% endfor %}
-                <form method="post" action="">{% csrf_token %}
-                    <input id="formset-prefix" type="hidden" value="{{ formset.prefix }}">
-                    {% for field in form.hidden_fields %}{{ field }}{% endfor %}
-                    <p class="input-field">
-                        {{ form.sprint.label_tag }}
-                        {{ form.sprint }}
-                    </p>
-                    <button type="submit" name="action-select-sprint" value="select" onclick="updateSprint(this.form);">Select</button>
-                </form>
-                <h3>Acceptance Criteria</h3>
-                <table class="acc-cri-tbl">
-                    <thead>
-                        <tr>
-                            <th scope="col">Title</th>
-                            <th scope="col">Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for f_form in formset.forms %}
-                        <tr>
-                            <td>{{ f_form.title }}</td>
-                            <td>{{ f_form.descr }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <form method="post" action="">{% csrf_token %}
-                    <input id="formset-prefix" type="hidden" value="{{ formset.prefix }}">
-                    {% for field in form.hidden_fields %}{{ field }}{% endfor %}
-                    {% for field in form.visible_fields %}
-                        <p class="input-field">
-                            {{ field.label_tag }}
-                            {{ field }}
-                        </p>
-                    {% endfor %}
-                    <button type="submit" name="action-select-sprint" value="select" onclick="updateSprint(this.form);">Select</button>
-                    <h3>Acceptance Criteria</h3>
-                    <table id="acc-cri-tbl-{{ backlog.id }}" class="acc-cri-tbl">
-                        <thead>
-                            <tr>
-                                <th scope="col">Title</th>
-                                <th scope="col">Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for f_form in formset.forms %}
-                            <tr id="{{ f_form.prefix }}-row">
-                                <td>
-                                    {% for fld in f_form.hidden_fields %}{{ fld }}{% endfor %}
-                                    {% if f_form.instance.id %}{{ f_form.DELETE }}{% endif %}
-                                    {{ f_form.title }}
-                                </td>
-                                <td>{{ f_form.descr }}</td>
-                            </tr>
+    {% if backlogs %}
+        <table id="backlog-table">
+            <tr>
+                <th>Priority</th>
+                <th>Project</th>    
+                <th>Module</th>
+                <th>Story Title</th>
+                <th>Status</th>
+                <th>Selected Sprint</th>
+                <th>Estimate</th>
+            </tr>
+            {% for backlog, form_estimate, form, formset in backlogs %}
+                <tr id="backlog-row-{{ backlog.id }}">
+                    <td>{{ backlog.priority }}</td>
+                    <td>{{ backlog.project.name }}</td>
+                    <td>{{ backlog.module }}</td>
+                    <td>{{ backlog.story_title }}</td>
+                    <td id="status-{{ backlog.id }}">{{ backlog.status.name }}</td>
+                    <td id="sprint-name-{{ backlog.id }}">{{ backlog.sprint }}</td>
+                    <td id="update_dttm-{{ backlog.id }}" style="display: none;">{{ backlog.update_dttm|date:"c" }}</td>
+                    <td>
+                        <form method="post">{% csrf_token %}
+                            {% for field in form_estimate.hidden_fields %}{{ field }}{% endfor %}
+                            {{ form_estimate.estimate }}
+                            <button onclick="updateEstimate(this.form);" name="action-update-estimate" value="update-estimate">Update</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr id="backlog-detail-row-{{ backlog.id }}">
+                    <td colspan="7">
+                        <form method="post" action="">{% csrf_token %}
+                            <input id="formset-prefix" type="hidden" value="{{ formset.prefix }}">
+                            {% for field in form.hidden_fields %}{{ field }}{% endfor %}
+                            {% for field in form.visible_fields %}
+                                <p class="input-field">
+                                    {{ field.label_tag }}
+                                    {{ field }}
+                                </p>
                             {% endfor %}
-                        </tbody>
-                    </table>
-                    <p>
-                        <div id="acc-cri-mgt-{{ backlog.id }}">{{ formset.management_form }}</div>
-                        <button type="submit" class="button-right-al" name="action-save" value="save" onclick="updateBacklog(this.form);">Save</button>
-                    </p>
-                </form>
-            {% endif %}
-        </td>
-    </tr>
-  {% endfor %}
-</table>
-{% else %}
-    <p>No backlogs are available.</p>
-{% endif %}
+                            <button type="submit" name="action-select-sprint" value="select" onclick="updateSprint(this.form);">Select</button>
+                            <h3 style="width: 100%; text-align: center;">Acceptance Criteria</h3>
+                            <table {% if not form.read_only %} id="acc-cri-tbl-{{ backlog.id }}" {% endif %} class="acc-cri-tbl">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Title</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for f_form in formset.forms %}
+                                        <tr id="{{ f_form.prefix }}-row">
+                                            <td class="acc-cri-td">
+                                                {% for fld in f_form.hidden_fields %}{{ fld }}{% endfor %}
+                                                {% if not form.read_only %}
+                                                    {% if f_form.instance.id %}{{ f_form.DELETE }}{% endif %}
+                                                {% endif %}
+                                                {{ f_form.title }}
+                                            </td>
+                                            <td class="acc-cri-td">{{ f_form.descr }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            {% if not form.read_only %}
+                                <p>
+                                    <div id="acc-cri-mgt-{{ backlog.id }}">{{ formset.management_form }}</div>
+                                    <button type="submit" class="button-right-al" name="action-save" value="save" onclick="updateBacklog(this.form);">Save</button>
+                                </p>
+                            {% endif %}
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>There are no backlogs available.</p>
+    {% endif %}
 {% endblock %}

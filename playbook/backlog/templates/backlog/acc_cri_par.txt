@@ -1,10 +1,12 @@
-{% for f_form in acceptance_criteria.forms %}
+{% for f_form in formset.forms %}
 <tr id="{{ f_form.prefix }}-row">
-    <td>
+    <td class="acc-cri-td">
         {% for fld in f_form.hidden_fields %}{{ fld }}{% endfor %}
-        {% if f_form.instance.id %}{{ f_form.DELETE }}{% endif %}
+        {% if not form.read_only %}
+            {% if f_form.instance.id %}{{ f_form.DELETE }}{% endif %}
+        {% endif %}
         {{ f_form.title }}
     </td>
-    <td>{{ f_form.descr }}</td>
+    <td class="acc-cri-td">{{ f_form.descr }}</td>
 </tr>
 {% endfor %}

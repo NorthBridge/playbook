@@ -2,9 +2,11 @@ import time
 from datetime import date
 from django import forms
 from django.db.models import Q
+from django.forms.models import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
 from ...core.models import Backlog, Estimate, Event,\
     AcceptanceCriteria
+from ..constants import QUEUED_STATUS
 
 
 class EstimateForm(forms.ModelForm):
@@ -45,6 +47,15 @@ class BacklogUpdateForm(forms.ModelForm):
         except Event.DoesNotExist:
             pass
 
+    def clean(self):
+        if self.is_backlog_queued():
+            raise forms.ValidationError("A queued backlog cannot be edited.",
+                                        code='not_editable')
+
+    def is_backlog_queued(self):
+        return self.instance.id and\
+            self.instance.status.id == QUEUED_STATUS
+
     def mark_fields_as_read_only(self):
         for field in self.fields:
             self.fields[field].widget.attrs['readonly'] = True
@@ -74,40 +85,65 @@ class BacklogUpdateForm(forms.ModelForm):
         fields = ('id', 'story_descr', 'notes', 'skills', 'sprint')
 
 
-# class AcceptanceCriteriaForm(forms.ModelForm):
+class AcceptanceCriteriaForm(forms.ModelForm):
 
-#     id = forms.CharField(widget=forms.HiddenInput())
-#     title = forms.CharField(
-#         max_length=AcceptanceCriteria._meta.get_field('title').max_length
-#     )
-#     descr = forms.CharField(
-#         max_length=AcceptanceCriteria._meta.get_field('descr').max_length
-#     )
+    id = forms.CharField(widget=forms.HiddenInput())
+    title = forms.CharField(
+        max_length=AcceptanceCriteria._meta.get_field('title').max_length,
+        widget=forms.Textarea()
+    )
+    descr = forms.CharField(
+        max_length=AcceptanceCriteria._meta.get_field('descr').max_length,
+        widget=forms.Textarea()
+    )
+    backlog = forms.CharField(
+        max_length=AcceptanceCriteria._meta.get_field('descr').max_length,
+        widget=forms.HiddenInput()
+    )
 
-#     def __init__(self, read_only=False, *args, **kwargs):
-#         self.read_only = kwargs.pop('read_only', False)
-#         super(AcceptanceCriteriaForm, self).__init__(*args, **kwargs)
-#         print 'self.read_only = %s' % self.read_only
-#         if self.read_only:
-#             self.mark_fields_as_read_only()
+    def __init__(self, *args, **kwargs):
+        super(AcceptanceCriteriaForm, self).__init__(*args, **kwargs)
+        if self.is_backlog_queued():
+            self.mark_fields_as_read_only()
 
-#     def mark_fields_as_read_only(self):
-#         for field in self.fields:
-#             self.fields[field].widget.attrs['readonly'] = True
+    def is_backlog_queued(self):
+        return self.instance.id and\
+            self.instance.backlog.status.id == QUEUED_STATUS
 
-#     def save(self, commit=True):
-#         instance = super(AcceptanceCriteriaForm, self).save(commit=False)
-#         if commit:
-#             instance.save(update_fields=['title', 'descr'])
-#         return instance
+    def mark_fields_as_read_only(self):
+        for field in self.fields:
+            self.fields[field].widget.attrs['readonly'] = True
 
-#     class Meta:
-#         model = AcceptanceCriteria
-#         fields = ('id', 'title', 'descr')
+    def save(self, commit=True):
+        instance = super(AcceptanceCriteriaForm, self).save(commit=False)
+        if commit:
+            instance.save(update_fields=['title', 'descr'])
+        return instance
 
-AcceptanceCriteriaFormSet = inlineformset_factory(Backlog, AcceptanceCriteria,
-                                                  fields=('id', 'backlog',
-                                                          'title', 'descr'),
-                                                  extra=1,
-                                                  widgets={'title': forms.Textarea(),
-                                                           'descr': forms.Textarea()})
+    class Meta:
+        model = AcceptanceCriteria
+        fields = ('id', 'backlog', 'title', 'descr')
+
+
+class CustomAcceptanceCriteriaFormSet(BaseInlineFormSet):
+
+    def __init__(self, data=None, files=None, instance=None,
+                 save_as_new=False, prefix=None, queryset=None, **kwargs):
+        super(CustomAcceptanceCriteriaFormSet, self).__init__(
+            data=data, files=files, instance=instance, save_as_new=save_as_new,
+            prefix=prefix, queryset=queryset, **kwargs)
+        if self.is_backlog_queued():
+            self.extra = 0
+
+    def clean(self):
+        if self.is_backlog_queued():
+            raise forms.ValidationError("A queued backlog cannot be edited.",
+                                        code='not_editable')
+
+    def is_backlog_queued(self):
+        return self.instance.id and\
+            self.instance.status.id == QUEUED_STATUS
+
+AcceptanceCriteriaFormSet = inlineformset_factory(
+    Backlog, AcceptanceCriteria, extra=1, form=AcceptanceCriteriaForm,
+    formset=CustomAcceptanceCriteriaFormSet)
