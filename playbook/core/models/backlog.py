@@ -1,8 +1,6 @@
 from django.db import models
-from . import Project
-from . import Event
-from . import Status
-from . import Team
+from datetime import datetime
+from . import Project, Event, Status, Team
 
 
 class Backlog(models.Model):
@@ -18,6 +16,8 @@ class Backlog(models.Model):
     team = models.ForeignKey(Team, db_column='team_id_fk')
     github_number = models.CharField(max_length=5, null=True)
     github_repo = models.CharField(max_length=50, null=True)
+    create_dttm = models.DateTimeField(default=datetime.now)
+    update_dttm = models.DateTimeField(null=True)
 
     def __unicode__(self):
         return self.story_title
