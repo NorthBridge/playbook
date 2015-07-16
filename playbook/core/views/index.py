@@ -18,17 +18,14 @@ def index(request):
 
     if team is None:
         user_email = request.user.email
-        try:
-            teams = Team.objects.filter(volunteers__email=user_email)
-        except Team.DoesNotExist:
-            # TODO: Volunteer not associated with a team. What to do?
-            pass
+        teams = Team.objects.filter(volunteers__email=user_email)
+        if (len(teams) == 0):
+            request.session['team'] = None
+        elif (len(teams) == 1):
+            request.session['team'] = teams[0].id
         else:
-            if (len(teams) > 1):
-                form = ChooseTeamForm(request)
-                context = RequestContext(request, {'teams': teams,
-                                                   'form': form})
-                return render(request, 'core/index.html', context)
-            else:
-                request.session['team'] = teams[0].id
+            form = ChooseTeamForm(request)
+            context = RequestContext(request, {'teams': teams,
+                                               'form': form})
+            return render(request, 'core/index.html', context)
     return render(request, 'core/index.html')
