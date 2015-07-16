@@ -1,12 +1,10 @@
 from django.utils.decorators import method_decorator
-from ....core.lib.ajax import login_required_ajax
-from django.contrib.auth.decorators import login_required
+from ....core.lib.ajax import login_required
 
 
-class RequireSignInAjax(object):
+class RequireSignIn(object):
 
-    @method_decorator(login_required)
-    @method_decorator(login_required_ajax())
+    @method_decorator(login_required())
     def dispatch(self, request, *args, **kwargs):
-        return super(RequireSignInAjax, self).dispatch(
+        return super(RequireSignIn, self).dispatch(
             request, *args, **kwargs)
