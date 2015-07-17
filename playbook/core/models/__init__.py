@@ -10,3 +10,4 @@ from .team_volunteer import TeamVolunteer
 from .backlog import Backlog
 from .acceptance_criteria import AcceptanceCriteria
 from .estimate import Estimate
+from .team_project import TeamProject

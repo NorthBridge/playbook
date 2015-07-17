@@ -6,7 +6,7 @@ from django.template import RequestContext
 from django.http import JsonResponse
 from django.views.generic import View
 from django.utils.timezone import localtime
-from ...core.models import Backlog, Estimate, Event, Status
+from ...core.models import Backlog, Estimate, Event, Status, Team, TeamProject
 from ...backlog.forms.backlog_form import AcceptanceCriteriaFormSet,\
     EstimateForm, BacklogUpdateForm
 from ...core.views.mixins.requiresigninajax import RequireSignIn
@@ -24,7 +24,9 @@ class BacklogView(RequireSignIn, View):
             return redirect(reverse('index'))
 
         # From here now we have all we need to list the backlogs
-        backlogs = Backlog.objects.filter(team__id=team_id,
+        project_id_list = TeamProject.objects.filter(
+            team__id=team_id).values_list('project_id')
+        backlogs = Backlog.objects.filter(project__id__in=project_id_list,
                                           status__id__in=[13, 14, 15],
                                           priority__in=['0', '1', '2'])\
             .order_by('project__name', 'priority', 'module', 'id')
@@ -110,11 +112,14 @@ class BacklogView(RequireSignIn, View):
                 "Please provide a valid Sprint.")
         else:
             try:
+                team_id = request.session.get('team')
                 # TODO: Should we validate if the user has privileges
                 #  over this backlog and sprint before updating?
                 backlog = Backlog.objects.get(id=backlog_id)
                 sprint = Event.objects.get(id=sprint_id)
+                team = Team.objects.get(id=team_id)
                 backlog.sprint = sprint
+                backlog.team = team
                 if backlog.status.id == OPEN_STATUS:
                     status = Status.objects.get(id=SELECTED_STATUS)
                     backlog.status = status
