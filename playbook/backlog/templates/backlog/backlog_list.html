@@ -101,6 +101,10 @@
                     backlog_id = /\d+/.exec(tr_id).toString();
                     $('#status-' + backlog_id).html(data.status);
                     $('#sprint-name-' + backlog_id).html(data.sprintName);
+                    $(form).find(".delete-row").remove();
+                    $(form).find(".add-row").remove();
+                    $(form).find("[name='action-save']").remove();
+                    $(form).find("textarea").attr('readonly', true);
                     updateDttm(backlog_id, data.update_dttm);
                     showMessage("Sprint successfuly updated.");
                 } else
@@ -220,18 +224,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for f_form in formset.forms %}
-                                        <tr id="{{ f_form.prefix }}-row">
-                                            <td class="acc-cri-td">
-                                                {% for fld in f_form.hidden_fields %}{{ fld }}{% endfor %}
-                                                {% if not form.read_only %}
-                                                    {% if f_form.instance.id %}{{ f_form.DELETE }}{% endif %}
-                                                {% endif %}
-                                                {{ f_form.title }}
-                                            </td>
-                                            <td class="acc-cri-td">{{ f_form.descr }}</td>
-                                        </tr>
-                                    {% endfor %}
+                                    {% include "backlog/acc_cri_par.txt" %}
                                 </tbody>
                             </table>
                             {% if not form.read_only %}
