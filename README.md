@@ -1,6 +1,6 @@
 This repository wiki describes Northbridge agile team processes.
 
-This repository code support the Alliance project, which is responsible for the interactions between Northbridge agile team processes and GitHub issues tracking.
+This repository code supports the Alliance project, which is responsible for the interactions between Northbridge agile team processes and GitHub issues tracking.
 
 There are three major components to Alliance: web interface, export, and import. These are represented as the yellow components of this diagram.
 
