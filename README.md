@@ -32,7 +32,7 @@ To install the dependencies you could do something like this (Ubuntu):
 
 	pip install -r requirements.txt
 
-Database settings are located in the playbook/settings.py file and must be updated to represent your local environment.
+The database settings are located in the playbook/settings.py file and must be updated to represent your local environment. There is also two other files that must be updated: playbook/email_settings.py (information concerning email service) and playbook/backlog/github_settings.py (information used to interact with the github API)
 
 If you do not already have the database structure you must run django migrate scripts:
 
