@@ -11,7 +11,7 @@ class Volunteer(models.Model):
     fname = models.CharField(max_length=50, default='NULL')
     lname = models.CharField(max_length=50, null=True)
     status_depr = models.CharField(max_length=10, null=True)
-    campaign = models.ForeignKey(Campaign, db_column='campaing_id_fk')
+    campaign = models.ForeignKey(Campaign, db_column='campaign_id_fk')
     create_dttm = models.DateTimeField(default=datetime.now)
     update_dttm = models.DateTimeField(null=True)
     descr = models.CharField(max_length=1000)
