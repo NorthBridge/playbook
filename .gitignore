@@ -2,9 +2,8 @@
 
 *~
 
-# Configuration and log file.
+# Configuration file.
 *CONFIG
-*.log
 
 # Compiled python modules.
 *.pyc
@@ -19,3 +18,12 @@
 # UltraEdit local project files
 *.pui
 *.prj
+
+#sublime files
+*sublime*
+
+#debug tool
+*debug_toolbar*
+
+#log files
+*.log

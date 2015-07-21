@@ -1,0 +1,12 @@
+{% for f_form in formset.forms %}
+<tr id="{{ f_form.prefix }}-row">
+    <td class="acc-cri-td">
+        {% for fld in f_form.hidden_fields %}{{ fld }}{% endfor %}
+        {% if not form.read_only %}
+            {% if f_form.instance.id %}{{ f_form.DELETE }}{% endif %}
+        {% endif %}
+        {{ f_form.title }}
+    </td>
+    <td class="acc-cri-td">{{ f_form.descr }}</td>
+</tr>
+{% endfor %}
