@@ -34,9 +34,8 @@
 <a href="{% url 'backlogs' %}">{% trans "List Backlog for current user" %}</a>
 {% if teams %}
 <div id="dialog-form" title="Select a Team">
-    <form action='/playbook/' method="post">
+    <form action='/playbook/' method="post">{% csrf_token %}
         <div>
-            {% csrf_token %}
             {{ form.team }}
             <!-- Allow form submission with keyboard without duplicating the dialog button -->
             <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
