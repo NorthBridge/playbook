@@ -3,10 +3,6 @@ from . import Team, Project, Event
 
 
 class TeamProject(models.Model):
-    # team_id_fk = models.IntegerField()
-    # project_id_fk = models.IntegerField()
-    # start_event_fk = models.IntegerField(blank=True, null=True)
-    # end_event_fk = models.IntegerField(blank=True, null=True)
     team = models.ForeignKey(Team, db_column='team_id_fk')
     project = models.ForeignKey(Project, db_column='project_id_fk')
     start_event = models.ForeignKey(Event, db_column='start_event_fk',
