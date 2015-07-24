@@ -13,8 +13,56 @@
     <script type="text/javascript" language="javascript">
     $(document).ready(function(){
         $("#choose-team").click(function (e) {
-            alert('Working on it...')
-            e.preventDefault();
+            var getting = $.get("/playbook/core/chooseTeam");
+            getting.done(function (data) {
+                if (data.success) {
+                    $("body").append(data.html)
+                    console.log(data.html)
+                    $("#dialog-form").dialog({modal: true});
+                    var dialog, form, team = $("#team");
+                    dialog = $("#dialog-form").dialog({
+                        autoOpen: false,
+                        width: 190,
+                        modal: true,
+                        buttons: {
+                            Submit: function() {
+                                var data = $(form).serializeArray();
+                                var posting = $.post("/playbook/core/chooseTeam", $.param(data));
+                                posting.done( function (data) {
+                                    if (data.success) {
+                                        showMessage("Team was selected.");
+                                    } else {
+                                        showErrors(data.messages);
+                                    }
+                                    dialog.dialog( "close" );
+                                });
+                                posting.fail(function (xhr) {
+                                    if (xhr.status == '401') {
+                                        redirectToLogin($(location).attr('pathname'));
+                                    }
+                                });
+                            },
+                            Cancel: function() {
+                                dialog.dialog( "close" );
+                            }
+                        },
+                        close: function() {
+                            form[0].reset();
+                            team.removeClass( "ui-state-error" );
+                        }
+                    });
+
+                    form = dialog.find("#choose-team-form");
+                } else {
+                    showErrors(data.messages);
+                }
+            });
+            getting.fail(function (xhr) {
+                if (xhr.status == '401') {
+                    redirectToLogin($(location).attr('pathname'));
+                }
+            });
+            return false;
         });
     });
     </script>
