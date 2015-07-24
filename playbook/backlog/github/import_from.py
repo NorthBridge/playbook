@@ -44,11 +44,11 @@ def import_from_github(payload):
                         (backlog.github_number, backlog.github_repo,
                          new_milestone_state, issue_title)
                 except KeyError:
-                    message = ("Invalid action passed as argument: \'%s\'." +
+                    message = ("Invalid action passed as argument: \'%s\'."
                                " This request is being ignored..." % action)
                     logger.error(message)
                 except Exception:
-                    message = ("Error updating milestone #%s from \'%s\'" +
+                    message = ("Error updating milestone #%s from \'%s\'"
                                " repo using issue \'%s\'") %\
                         (backlog.github_number, backlog.github_repo,
                          issue_title)
@@ -57,7 +57,7 @@ def import_from_github(payload):
                                             traceback.format_exc())
                     raise
         else:
-            message = ("Issues without \"owner acceptance\" label are not" +
+            message = ("Issues without \"owner acceptance\" label are not"
                        " treated.")
         return message
     else:
