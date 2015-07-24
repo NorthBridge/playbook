@@ -16,8 +16,8 @@
             var getting = $.get("/playbook/core/chooseTeam");
             getting.done(function (data) {
                 if (data.success) {
+                    $("#dialog-form").remove();
                     $("body").append(data.html)
-                    console.log(data.html)
                     $("#dialog-form").dialog({modal: true});
                     var dialog, form, team = $("#team");
                     dialog = $("#dialog-form").dialog({
