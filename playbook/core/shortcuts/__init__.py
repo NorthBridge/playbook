@@ -38,3 +38,7 @@ def send_email(subject, body, to=EMAIL_RECIPIENT_LIST):
                          "\tSubject: %s\n" +
                          "\tBody: %s\n" +
                          "\tRecipient: %s", subject, body, to)
+
+
+def create_json_message_object(message, field="__all__", code="invalid"):
+    return json.dumps({field: [{"message": message, "code": code}]})

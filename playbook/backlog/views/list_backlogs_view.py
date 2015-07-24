@@ -1,4 +1,3 @@
-import json
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
@@ -7,6 +6,7 @@ from django.http import JsonResponse
 from django.views.generic import View
 from django.utils.timezone import localtime
 from ...core.models import Backlog, Estimate, Event, Status, Team, TeamProject
+from ...core.shortcuts import create_json_message_object
 from ...backlog.forms.backlog_form import AcceptanceCriteriaFormSet,\
     EstimateForm, BacklogUpdateForm
 from ...core.views.mixins.requiresigninajax import RequireSignIn
@@ -105,10 +105,10 @@ class BacklogView(RequireSignIn, View):
         backlog_id = request.POST.get('backlog-id')
         sprint_id = request.POST.get('backlog-sprint')
         if not backlog_id:
-            results['errors'] = self.create_error_json_object(
+            results['errors'] = create_json_message_object(
                 "Please provide a valid Backlog.")
         elif not sprint_id:
-            results['errors'] = self.create_error_json_object(
+            results['errors'] = create_json_message_object(
                 "Please provide a valid Sprint.")
         else:
             try:
@@ -127,17 +127,17 @@ class BacklogView(RequireSignIn, View):
                 export_to_github(backlog)
                 backlog.refresh_from_db()
             except Event.DoesNotExist:
-                results['errors'] = self.create_error_json_object(
+                results['errors'] = create_json_message_object(
                     "Sprint does not exist.")
             except Backlog.DoesNotExist:
-                results['errors'] = self.create_error_json_object(
+                results['errors'] = create_json_message_object(
                     "Backlog does not exist.")
             except Status.DoesNotExist:
-                results['errors'] = self.create_error_json_object(
+                results['errors'] = create_json_message_object(
                     "Status does not exist.")
             except Exception as e:
-                results['errors'] = self.create_error_json_object(
-                    str(e), "exception")
+                results['errors'] = create_json_message_object(
+                    str(e), code="exception")
             else:
                 results['status'] = backlog.status.name
                 results['update_dttm'] = localtime(backlog.update_dttm)
@@ -175,6 +175,3 @@ class BacklogView(RequireSignIn, View):
                     results['errors'] = formset.non_form_errors()
             else:
                 results['errors'] = form.errors.as_json()
-
-    def create_error_json_object(self, message, code="invalid"):
-        return json.dumps({"__all__": [{"message": message, "code": code}]})
