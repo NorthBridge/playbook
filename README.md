@@ -71,7 +71,14 @@ Second way: Use your global python environment
 
 The database settings are located in the playbook/settings.py file and must be updated to represent your local environment.
 
-5. install django
+* creat a passwords.py file in your playbook folder
+* gitignore it by adding it to bottom of the gitignore file
+* confirm with github that the file is not visible (not included in commit)
+* create variables and set them (name_of_database, user, password, host (localhost), port (5432))
+* save everything!
+
+
+5. install django (should have been done with pip install)
 
 6. install the project
 
