@@ -58,6 +58,12 @@ The database settings are located in the playbook/settings.py file and must be u
 
 6. install the project
 
+        For OSX:
+        Install postresql from http://postgresapp.com
+        Open the terminal and type "sudo easy_install" + the name of each of the requirements in the requirement.txt file. 
+        For psycopg2 you will have to set up the file path for postgress app and then restart the terminal to avoid errors.
+	
+
 Run django migrate scripts:
 
 	# Note that running the following commands will create an empty
