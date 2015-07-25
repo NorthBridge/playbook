@@ -49,6 +49,12 @@ If you want to use a virtual environment you must do something like (Ubuntu):
 	# The next command is only necessary if you are not already using the created virtualenv
 	workon playbook
 
+	* If it says "command not found", try typing: virtualenv virtualenv
+	* ls to confirm that "venv" is amongst your files.
+	* type: source venv/bin/activate to activate your virtual environment.
+	You should see (venv) before your project directory
+
+
 To install the dependencies you could do something like this (Ubuntu):
 
 	pip install -r requirements.txt
@@ -56,14 +62,14 @@ To install the dependencies you could do something like this (Ubuntu):
 Second way: Use your global python environment
 
 	install the dependencies listed in requirements.txt using the easy_install utility
-	
+
 	example: easy_install psycopg2
 
 3. install postresql
 
 4. update your database connection settings using your database admin user
 
-The database settings are located in the playbook/settings.py file and must be updated to represent your local environment. 
+The database settings are located in the playbook/settings.py file and must be updated to represent your local environment.
 
 5. install django
 
