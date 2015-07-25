@@ -33,6 +33,9 @@ If you want to use a virtual environment you must do something like (Ubuntu):
 	# The next command is only necessary if you are not already using the created virtualenv
 	workon playbook
 
+To install the dependencies for Windows you could
+	python -m pip install
+
 To install the dependencies you could do something like this (Ubuntu):
 
 	pip install -r requirements.txt
