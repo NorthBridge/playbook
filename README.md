@@ -43,7 +43,7 @@ Second way: Use your global python environment
 	
 	example: easy_install psycopg2
 
-3. install postresql
+3. install the postresql app from http://postgresapp.com
 
 4. update your database connection settings using your database admin user
 
