@@ -1,5 +1,17 @@
 Overview
 ========
+                 __________________
+                |                  |_____    __
+                |Meow! I'm a cat   |     |__|  |_________
+                |_________________ |     |::|  |        /
+   /\**/\       |                  \.____|::|__|      <
+  ( o_o  )_     |                        \::/  \._______\
+   (u--u   \_)  |
+    (||___   )==\
+  ,dP"/b/=( /P"/b\
+  |8 || 8\=== || 8
+  `b,  ,P  `b,  ,P
+    """`     """`
 
 This repository wiki describes Northbridge agile team processes.
 
