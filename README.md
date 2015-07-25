@@ -115,6 +115,8 @@ Create a superuser
 
 	python manage.py createsuperuser
 
+enter in a username, email and password
+
 Running
 =======
 
