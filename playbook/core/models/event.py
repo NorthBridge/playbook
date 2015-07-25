@@ -4,7 +4,7 @@ from . import Schedule
 
 class Event(models.Model):
     name = models.CharField(max_length=50)
-    schedule = models.ForeignKey(Schedule, db_column='schedule_id_fk', null=True)
+    schedule = models.ForeignKey(Schedule, db_column='schedule_id_fk', null="True")
     start_dttm = models.DateField(null=True)
     end_dttm = models.DateField(null=True)
 
