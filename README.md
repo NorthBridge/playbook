@@ -17,20 +17,41 @@ Import: When invoked, update a Backlog User Story to Accepted. This process will
 
 Installation
 ============
+####Install pip
 
+##### Ubuntu
+	
 	sudo apt-get install python-pip
+	
+##### Mac
 
-If you want to use a virtual environment you must do something like (Ubuntu):
+Install pip with either easy_install or homebrew:
+	
+	sudo easy_install pip
 
+	brew install python
+	
+####Create virtual environment (optional)
+
+##### Ubuntu and Mac
 	pip install virtualenvwrapper
 	# Go to the project directory
 	mkvirtualenv playbook
 	# The next command is only necessary if you are not already using the created virtualenv
 	workon playbook
+	
+####Install dependencies
 
-To install the dependencies you could do something like this (Ubuntu):
+##### Ubuntu
 
 	pip install -r requirements.txt
+	
+##### Mac
+
+Install requirements
+	
+	sudo pip install -r requirements.txt
+
 
 The database settings are located in the playbook/settings.py file and must be updated to represent your local environment. There is also two other files that must be updated: playbook/email_settings.py (information concerning email service) and playbook/backlog/github_settings.py (information used to interact with the github API)
 
@@ -49,6 +70,21 @@ Running
 =======
 
 	python manage.py runserver [host:port]
+
+Troubleshoot
+============
+### Error: pg_config executable not found.
+	
+Make sure PostGres is installed on your machine.
+
+#### Mac
+
+Go to http://postgresapp.com/ and follow the instructions to add the application.
+
+Add the path to ~/.profile
+	
+	echo PATH="/Applications/Postgres.app/Contents/Versions/9.4/bin:$PATH" >> ~/.profile
+	source ~/.profile
 
 Now you can go to \<host\>:\<port\>/admin and login using the user created above. You can create groups and regular users that will be used to login into the playbook application (\<host\>:\<port\>/playbook).
 
