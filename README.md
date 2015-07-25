@@ -43,9 +43,17 @@ Second way: Use your global python environment
 	
 	example: easy_install psycopg2
 
-The database settings are located in the playbook/settings.py file and must be updated to represent your local environment. There is also two other files that must be updated: playbook/email_settings.py (information concerning email service) and playbook/backlog/github_settings.py (information used to interact with the github API)
+3. install postresql
 
-If you do not already have the database structure you must run django migrate scripts:
+4. update your database connection settings using your database admin user
+
+The database settings are located in the playbook/settings.py file and must be updated to represent your local environment. 
+
+5. install django
+
+6. install the project
+
+Run django migrate scripts:
 
 	# Note that running the following commands will create an empty
 	#  database (No projects, teams, backlogs, volunteers etc)
@@ -64,3 +72,6 @@ Running
 Now you can go to \<host\>:\<port\>/admin and login using the user created above. You can create groups and regular users that will be used to login into the playbook application (\<host\>:\<port\>/playbook).
 
 A main restriction is that the user's email must match the volunteer's email. It is through this relation that we can link a django user and the volunteer's informations. For now there is no database constraint ensuring this.
+
+
+There is also two other files that must be updated: playbook/email_settings.py (information concerning email service) and playbook/backlog/github_settings.py (information used to interact with the github API)
