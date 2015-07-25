@@ -1,4 +1,4 @@
-Overview-yay
+Overview
 ========
 
 This repository wiki describes Northbridge agile team processes.
