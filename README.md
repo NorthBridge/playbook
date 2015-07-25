@@ -50,11 +50,27 @@ Second way: Use your global python environment
 	
 	example: easy_install psycopg2
 
-3. install postresql
+3. install postresql 
 
 4. update your database connection settings using your database admin user
 
+helpful link: https://help.ubuntu.com/community/PostgreSQL
+
 The database settings are located in the playbook/settings.py file and must be updated to represent your local environment. 
+
+create the database north6_devwaterwheel by running the following in the command line:
+create database northbr6_devwaterwheel
+
+You can change credencials to fit file (aka user: postgres with password:postgres like specified in settings.py under "DATABASES") which can be done like so:
+
+In a terminal, type:
+
+sudo -u postgres psql postgres
+Set a password for the "postgres" database role using the command:
+
+\password postgres
+
+OR configure to have your username and password in settings.py
 
 5. install django
 
