@@ -17,6 +17,11 @@ Import: When invoked, update a Backlog User Story to Accepted. This process will
 
 Installation
 ============
+1. Install python, v 2.7 or higher
+
+2. Install project dependencies. There are two ways to do this.
+
+First way: Use a virtual environment:
 
 	sudo apt-get install python-pip
 
@@ -32,9 +37,23 @@ To install the dependencies you could do something like this (Ubuntu):
 
 	pip install -r requirements.txt
 
-The database settings are located in the playbook/settings.py file and must be updated to represent your local environment. There is also two other files that must be updated: playbook/email_settings.py (information concerning email service) and playbook/backlog/github_settings.py (information used to interact with the github API)
+Second way: Use your global python environment
 
-If you do not already have the database structure you must run django migrate scripts:
+	install the dependencies listed in requirements.txt using the easy_install utility
+	
+	example: easy_install psycopg2
+
+3. install postresql
+
+4. update your database connection settings using your database admin user
+
+The database settings are located in the playbook/settings.py file and must be updated to represent your local environment. 
+
+5. install django
+
+6. install the project
+
+Run django migrate scripts:
 
 	# Note that running the following commands will create an empty
 	#  database (No projects, teams, backlogs, volunteers etc)
@@ -53,3 +72,6 @@ Running
 Now you can go to \<host\>:\<port\>/admin and login using the user created above. You can create groups and regular users that will be used to login into the playbook application (\<host\>:\<port\>/playbook).
 
 A main restriction is that the user's email must match the volunteer's email. It is through this relation that we can link a django user and the volunteer's informations. For now there is no database constraint ensuring this.
+
+
+There is also two other files that must be updated: playbook/email_settings.py (information concerning email service) and playbook/backlog/github_settings.py (information used to interact with the github API)
