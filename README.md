@@ -19,6 +19,11 @@ Installation
 ============
 1. Install python, v 2.7 or higher
 
+        Installation on OSX:
+
+            Install python (2.7 or higher) go to https://www.python.org/downloads/mac-osx/
+
+
 2. Install project dependencies. There are two ways to do this.
 
 First way: Use a virtual environment:
