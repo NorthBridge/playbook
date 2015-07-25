@@ -15,6 +15,22 @@ Import: When invoked, update a Backlog User Story to Accepted. This process will
 
 ![Project Diagram](http://northbridgetech.org/images/alliance2.jpg)
 
+Setup
+=====
+
+In order to work on these files, search for "NorthBridge Playbook" in Github and
+click on "fork" to have a copy in your own repository section in your profile.
+
+Click on "Clone in Desktop" in order to have a copy of all of the files on your
+Desktop (or wherever you choose to save and access the files)
+
+Open the files in your favorite text editor (I like to use Atom) and cd into the
+project in your terminal.
+
+Now you should be ready to work on the project!
+
+
+
 Installation
 ============
 1. Install python, v 2.7 or higher
