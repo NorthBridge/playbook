@@ -17,7 +17,9 @@ Import: When invoked, update a Backlog User Story to Accepted. This process will
 
 Installation
 ============
-####Install pip
+TODO: add Windows instructions
+
+####1) Install pip
 
 ##### Ubuntu
 	
@@ -31,7 +33,7 @@ Install pip with either easy_install or homebrew:
 
 	brew install python
 	
-####Create virtual environment (optional)
+####2) Create virtual environment (optional)
 
 ##### Ubuntu and Mac
 	pip install virtualenvwrapper
@@ -40,16 +42,10 @@ Install pip with either easy_install or homebrew:
 	# The next command is only necessary if you are not already using the created virtualenv
 	workon playbook
 	
-####Install dependencies
+####3) Install dependencies
 
-##### Ubuntu
+##### Ubuntu and Mac
 
-	pip install -r requirements.txt
-	
-##### Mac
-
-Install requirements
-	
 	sudo pip install -r requirements.txt
 
 
@@ -71,6 +67,12 @@ Running
 
 	python manage.py runserver [host:port]
 
+
+Now you can go to \<host\>:\<port\>/admin and login using the user created above. You can create groups and regular users that will be used to login into the playbook application (\<host\>:\<port\>/playbook).
+
+A main restriction is that the user's email must match the volunteer's email. It is through this relation that we can link a django user and the volunteer's informations. For now there is no database constraint ensuring this.
+
+
 Troubleshoot
 ============
 ### Error: pg_config executable not found.
@@ -85,7 +87,3 @@ Add the path to ~/.profile
 	
 	echo PATH="/Applications/Postgres.app/Contents/Versions/9.4/bin:$PATH" >> ~/.profile
 	source ~/.profile
-
-Now you can go to \<host\>:\<port\>/admin and login using the user created above. You can create groups and regular users that will be used to login into the playbook application (\<host\>:\<port\>/playbook).
-
-A main restriction is that the user's email must match the volunteer's email. It is through this relation that we can link a django user and the volunteer's informations. For now there is no database constraint ensuring this.
