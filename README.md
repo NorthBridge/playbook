@@ -17,61 +17,72 @@ Import: When invoked, update a Backlog User Story to Accepted. This process will
 
 Installation
 ============
-<<<<<<< HEAD
 TODO: add Windows instructions
-=======
-1. Install python, v 2.7 or higher
 
-2. Install project dependencies. There are two ways to do this.
+####1. Install python, v 2.7 or higher
 
-First way: Use a virtual environment:
->>>>>>> e5fea067c1f4ec1dca5c9b0945e0882209a4979c
+####2. Install project dependencies. There are two ways to do this.
 
-####1) Install pip
+#####First way: Use a virtual environment:
 
-##### Ubuntu
+a) Install pip
+
+###### Ubuntu
 	
 	sudo apt-get install python-pip
 	
-##### Mac
+###### Mac
 
-Install pip with either easy_install or homebrew:
+Using easy_install:
 	
 	sudo easy_install pip
 
+Using homebrew:
+
 	brew install python
 	
-####2) Create virtual environment (optional)
+b) Create virtual environment
 
-##### Ubuntu and Mac
+###### Ubuntu and Mac
+	
 	pip install virtualenvwrapper
 	# Go to the project directory
 	mkvirtualenv playbook
 	# The next command is only necessary if you are not already using the created virtualenv
 	workon playbook
-	
-####3) Install dependencies
 
-##### Ubuntu and Mac
+c) Install dependencies
+
+###### Ubuntu and Mac
 
 	sudo pip install -r requirements.txt
 
+#####Second way: Use your global python environment
 
-Second way: Use your global python environment
-
-	install the dependencies listed in requirements.txt using the easy_install utility
+Install the dependencies listed in requirements.txt using the easy_install utility
 	
 	example: easy_install psycopg2
 
-3. install postresql
 
-4. update your database connection settings using your database admin user
+###3) Install PostgreSQL
+
+###### Mac
+
+a) Download Postgres.app from http://postgresapp.com/
+
+b) Add the path to ~/.profile
+	
+	echo 'export PATH="/Applications/Postgres.app/Contents/Versions/9.4/bin:$PATH"' >> ~/.profile
+
+	source ~/.profile
+
+###3) Update your database connection settings using your database admin user
 
 The database settings are located in the playbook/settings.py file and must be updated to represent your local environment. 
 
-5. install django
+###5) install django
 
-6. install the project
+###6) install the project
 
 Run django migrate scripts:
 
@@ -95,21 +106,12 @@ Now you can go to \<host\>:\<port\>/admin and login using the user created above
 A main restriction is that the user's email must match the volunteer's email. It is through this relation that we can link a django user and the volunteer's informations. For now there is no database constraint ensuring this.
 
 
-<<<<<<< HEAD
 Troubleshoot
 ============
 ### Error: pg_config executable not found.
 	
-Make sure PostGres is installed on your machine.
+Make sure PostGres is installed on your machine. (See step 3)
 
-#### Mac
-
-Go to http://postgresapp.com/ and follow the instructions to add the application.
-
-Add the path to ~/.profile
-	
-	echo PATH="/Applications/Postgres.app/Contents/Versions/9.4/bin:$PATH" >> ~/.profile
-	source ~/.profile
 =======
 There is also two other files that must be updated: playbook/email_settings.py (information concerning email service) and playbook/backlog/github_settings.py (information used to interact with the github API)
 >>>>>>> e5fea067c1f4ec1dca5c9b0945e0882209a4979c
