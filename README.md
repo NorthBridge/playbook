@@ -29,7 +29,14 @@ If you want to use a virtual environment you must do something like (Ubuntu):
 
 	pip install virtualenvwrapper
 	# Go to the project directory
+
+	#make sure you are in the directory playbook (if you do "ls" in your command line you will find there is another folder called playbook--don't go in there. stay here.)
+
+	export WORKON_HOME=$HOME/.virtualenvs
+	source /usr/local/bin/virtualenvwrapper.sh
+
 	mkvirtualenv playbook
+
 	# The next command is only necessary if you are not already using the created virtualenv
 	workon playbook
 
