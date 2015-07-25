@@ -17,6 +17,11 @@ Import: When invoked, update a Backlog User Story to Accepted. This process will
 
 Installation
 ============
+1. Install python, v 2.7 or higher
+
+2. Install project dependencies. There are two ways to do this.
+
+First way: Use a virtual environment:
 
 	sudo apt-get install python-pip
 
@@ -31,6 +36,12 @@ If you want to use a virtual environment you must do something like (Ubuntu):
 To install the dependencies you could do something like this (Ubuntu):
 
 	pip install -r requirements.txt
+
+Second way: Use your global python environment
+
+	install the dependencies listed in requirements.txt using the easy_install utility
+	
+	example: easy_install psycopg2
 
 The database settings are located in the playbook/settings.py file and must be updated to represent your local environment. There is also two other files that must be updated: playbook/email_settings.py (information concerning email service) and playbook/backlog/github_settings.py (information used to interact with the github API)
 
