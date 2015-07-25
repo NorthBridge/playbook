@@ -1,4 +1,4 @@
-SET search_path = volunteer, pg_catalog;
+-- SET search_path = volunteer, pg_catalog;
 
 INSERT INTO team (focus, name, visibility, task_manager_id) VALUES ('Javascript/HTML', 'Team North Stars', 'Public', 1);
 INSERT INTO team (focus, name, visibility, task_manager_id) VALUES ('PythonDjango', '2015 Summer Interns', 'Private', 1);
@@ -50,14 +50,14 @@ INSERT INTO project (name, descr, application_id_fk, end_event_fk, schedule_id_f
 INSERT INTO project (name, descr, application_id_fk, end_event_fk, schedule_id_fk, start_event_fk) VALUES ('1.0', 'Greenfield Android app.', 3, 1, 1, 1);
 INSERT INTO project (name, descr, application_id_fk, end_event_fk, schedule_id_fk, start_event_fk) VALUES ('2.0', 'Build out the Resume features of Alliance Desktop', 4, 1, 1, 1);
 INSERT INTO project (name, descr, application_id_fk, end_event_fk, schedule_id_fk, start_event_fk) VALUES ('1.1', 'Improve the existing features of Alliance Desktop', 4, 1, 1, 1);
-INSERT INTO project (name, descr, application_id_fk, end_event_fk, schedule_id_fk, start_event_fk) VALUES ('Select a team, please.', '', 0, 1, 1, 1);
+INSERT INTO project (name, descr, application_id_fk, end_event_fk, schedule_id_fk, start_event_fk) VALUES ('Select a team, please.', '', 1, 1, 1, 1);
 INSERT INTO project (name, descr, application_id_fk, end_event_fk, schedule_id_fk, start_event_fk) VALUES ('Pilot release', 'Controlled public engagement, 500+ community organizations across Illinois ', 2, 1, 1, 1);
 INSERT INTO project (name, descr, application_id_fk, end_event_fk, schedule_id_fk, start_event_fk) VALUES ('1.0', 'Backlog/GitHub integration', 5, 1, 1, 1);
 
-INSERT INTO backlog (story_title, story_descr, priority, module, skills, notes, github_number, github_repo, sprint_id_fk, status_id_fk, team_id_fk, create_dttm, update_dttm, project_id_fk) VALUES ('Bootstrap', 'Teach the system to start, stop and log messages', '1', 'Backlog', 'Python', 'Use python logging framework of your choice.', NULL, NULL, 26, 13, 9, now(), NULL, 5);
-INSERT INTO backlog (story_title, story_descr, priority, module, skills, notes, github_number, github_repo, sprint_id_fk, status_id_fk, team_id_fk, create_dttm, update_dttm, project_id_fk) VALUES ('DB Connect', 'Teach the system to connect to the database', '2', 'Backlog', 'Python, PostgreSQL', 'Kathy will provide connectivity details', NULL, NULL, 26, 13, 9, now(), NULL, 5);
-INSERT INTO backlog (story_title, story_descr, priority, module, skills, notes, github_number, github_repo, sprint_id_fk, status_id_fk, team_id_fk, create_dttm, update_dttm, project_id_fk) VALUES ('Backlog Read', 'Teach the system to locate Backlog items for export', '2', 'Backlog', 'Python, PostgreSQL', 'Kathy will provide table details', NULL, NULL, 26, 13, 10, now(), NULL, 5);
-INSERT INTO backlog (story_title, story_descr, priority, module, skills, notes, github_number, github_repo, sprint_id_fk, status_id_fk, team_id_fk, create_dttm, update_dttm, project_id_fk) VALUES ('GitHub Connect', 'Teach the system to connect to GitHub API', '1', 'Backlog', 'Python, GitHub API', 'Connection authentication, if needed, can probably be satisified with any user credentials.', NULL, NULL, 26, 13, 10, now(), NULL, 5);
+INSERT INTO backlog (story_title, story_descr, priority, module, skills, notes, github_number, github_repo, sprint_id_fk, status_id_fk, team_id_fk, create_dttm, update_dttm, project_id_fk) VALUES ('Bootstrap', 'Teach the system to start, stop and log messages', '1', 'Backlog', 'Python', 'Use python logging framework of your choice.', NULL, NULL, 26, 1, 1, now(), NULL, 5);
+INSERT INTO backlog (story_title, story_descr, priority, module, skills, notes, github_number, github_repo, sprint_id_fk, status_id_fk, team_id_fk, create_dttm, update_dttm, project_id_fk) VALUES ('DB Connect', 'Teach the system to connect to the database', '2', 'Backlog', 'Python, PostgreSQL', 'Kathy will provide connectivity details', NULL, NULL, 26, 1, 1, now(), NULL, 5);
+INSERT INTO backlog (story_title, story_descr, priority, module, skills, notes, github_number, github_repo, sprint_id_fk, status_id_fk, team_id_fk, create_dttm, update_dttm, project_id_fk) VALUES ('Backlog Read', 'Teach the system to locate Backlog items for export', '2', 'Backlog', 'Python, PostgreSQL', 'Kathy will provide table details', NULL, NULL, 26, 1, 2, now(), NULL, 5);
+INSERT INTO backlog (story_title, story_descr, priority, module, skills, notes, github_number, github_repo, sprint_id_fk, status_id_fk, team_id_fk, create_dttm, update_dttm, project_id_fk) VALUES ('GitHub Connect', 'Teach the system to connect to GitHub API', '1', 'Backlog', 'Python, GitHub API', 'Connection authentication, if needed, can probably be satisified with any user credentials.', NULL, NULL, 26, 1, 2, now(), NULL, 5);
 
 INSERT INTO acceptance_criteria (descr, title, backlog_id_fk) VALUES ('test description', 'test title', 4);
 INSERT INTO acceptance_criteria (descr, title, backlog_id_fk) VALUES ('test descr', 'test title', 3);
