@@ -14,7 +14,7 @@ class ChooseTeam(RequireSignIn, View):
         user_email = request.user.email
         teams = Team.objects.filter(volunteers__email=user_email)
         if (len(teams) == 0):
-            results['errors'] = self.create_json_message_object(
+            results['errors'] = create_json_message_object(
                 "There is no team associated with this volunteer.")
         elif (len(teams) == 1):
             request.session['team'] = teams[0].id
