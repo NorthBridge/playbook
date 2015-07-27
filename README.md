@@ -80,6 +80,11 @@ Second way: Use your global python environment
 
 ###3) Install PostgreSQL
 
+###### For OSX:
+Install postresql from http://postgresapp.com
+Open the terminal and type "sudo easy_install" + the name of each of the requirements in the requirement.txt file. 
+For psycopg2 you will have to set up the file path for postgress app and then restart the terminal to avoid errors.
+
 ###### Ubuntu
 
 helpful link: https://help.ubuntu.com/community/PostgreSQL
