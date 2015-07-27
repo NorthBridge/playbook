@@ -35,28 +35,29 @@ Now you should be ready to work on the project!
 Installation
 ============
 
-####1. Install python (2.7 or higher) go to https://www.python.org/downloads/mac-osx/
+####1. Install python (2.7 or higher)
 
-				TODO: add Windows instructions
-
-        Installation on OSX:
+	TODO: add Windows instructions
+	Installation on OSX: go to https://www.python.org/downloads/mac-osx/
 
 ####2. Install project dependencies. There are two ways to do this.
 
-#####First way: Use a virtual environment:
+#####First way: Use a virtual environment (Ubuntu):
 
+	# Install pip
 	sudo apt-get install python-pip
-
-If you want to use a virtual environment you must do something like (Ubuntu):
-
+	
+	# Install virtualenv using pip
 	pip install virtualenvwrapper
-	# Go to the project directory
-
-	#make sure you are in the directory playbook (if you do "ls" in your command line you will find there is another folder called playbook--don't go in there. stay here.)
-
+	
+	# Add the following two lines in your ~/.bashrc script:
 	export WORKON_HOME=$HOME/.virtualenvs
 	source /usr/local/bin/virtualenvwrapper.sh
-
+	
+	# Close the file and source it:
+	source ~/.bashrc
+	
+	# Go to the project directory: Make sure you are in the directory playbook (if you do "ls" in your command line you will find there is another folder called playbook. Don't go in there. Stay here.)
 	mkvirtualenv playbook
 
 	# The next command is only necessary if you are not already using the created virtualenv
@@ -75,7 +76,7 @@ If you want to use a virtual environment you must do something like (Ubuntu):
 
 	pip install -r requirements.txt
 
-Second way: Use your global python environment
+#####Second way: Use your global python environment
 
 	install the dependencies listed in requirements.txt using the easy_install utility
 
@@ -130,10 +131,7 @@ Set a password for the "postgres" database role using the command:
 
 OR configure to have your username and password in settings.py
 
-5. install django
-
-
-6. install the project
+5. install the project
 
 Run django migrate scripts:
 
@@ -148,12 +146,32 @@ Create a superuser
 
 enter in a username, email and password
 
+Use the static_inserts.sql file to populate the database with usefull testing information:
+
+1. Open the file and update the lines below with your information:
+
+	\set email '\'' '<The email you used to create the django account>' '\''
+	\set fname '\'' '<your first name>' '\''
+	\set lname '\'' '<your last name>' '\''
+	
+For example:
+
+	\set email '\'' 'johndoe@gmail.com' '\''
+	\set fname '\'' 'John' '\''
+	\set lname '\'' 'Doe' '\''
+
+2. After that, run the following command to import the data (you must be logged as a user that has privileges to access/update the database or provide user/password information to psql):
+
+	psql northbr6_devwaterwheel < static_inserts.sql
+
 Running
 =======
 
 	python manage.py runserver [host:port]
 
 Now you can go to \<host\>:\<port\>/admin and login using the user created above. You can create groups and regular users that will be used to login into the playbook application (\<host\>:\<port\>/playbook).
+
+After logging into the admin interface, create a new user, using the same email you specified when running the static_inserts.sql file. The email field will be the link between the django auth user and the NorthBridge volunteer.
 
 A main restriction is that the user's email must match the volunteer's email. It is through this relation that we can link a django user and the volunteer's informations. For now there is no database constraint ensuring this.
 
