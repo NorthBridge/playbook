@@ -1,6 +1,7 @@
 Overview
 ========
 
+
 This repository wiki describes Northbridge agile team processes.
 
 This repository code supports the Alliance project, which is responsible for the interactions between Northbridge agile team processes and GitHub issues tracking.
@@ -34,41 +35,20 @@ Now you should be ready to work on the project!
 Installation
 ============
 
+####1. Install python (2.7 or higher) go to https://www.python.org/downloads/mac-osx/
 
-
-####1. Install python, v 2.7 or higher
-
-
-TODO: add Windows instructions
+				TODO: add Windows instructions
 
         Installation on OSX:
-
-            Install python (2.7 or higher) go to https://www.python.org/downloads/mac-osx/
 
 ####2. Install project dependencies. There are two ways to do this.
 
 #####First way: Use a virtual environment:
 
-a) Install pip
-
-###### Ubuntu
-	
 	sudo apt-get install python-pip
-	
-###### Mac
 
-Using easy_install:
-	
-	sudo easy_install pip
+If you want to use a virtual environment you must do something like (Ubuntu):
 
-Using homebrew:
-
-	brew install python
-	
-b) Create virtual environment
-
-###### Ubuntu and Mac
-	
 	pip install virtualenvwrapper
 	# Go to the project directory
 
@@ -82,18 +62,19 @@ b) Create virtual environment
 	# The next command is only necessary if you are not already using the created virtualenv
 	workon playbook
 
-To install the dependencies for Windows you could
+###### Ubuntu and Mac
+=======
+To install the dependencies for Windows you could type in the command below:
+
 	python -m pip install
 
 To install the dependencies you could do something like this (Ubuntu):
 
-###### Ubuntu and Mac
+	pip install -r requirements.txt
 
-	sudo pip install -r requirements.txt
+Second way: Use your global python environment
 
-#####Second way: Use your global python environment
-
-Install the dependencies listed in requirements.txt using the easy_install utility
+	install the dependencies listed in requirements.txt using the easy_install utility
 	
 	example: easy_install psycopg2
 
@@ -113,7 +94,7 @@ b) Add the path to ~/.profile
 
 	source ~/.profile
 
-###3) Update your database connection settings using your database admin user
+4. update your database connection settings using your database admin user
 
 The database settings are located in the playbook/settings.py file and must be updated to represent your local environment. 
 
@@ -131,7 +112,11 @@ Set a password for the "postgres" database role using the command:
 
 	\password postgres
 
-###6) install the project
+OR configure to have your username and password in settings.py
+
+5. install django
+
+6. install the project
 
 Run django migrate scripts:
 
@@ -144,23 +129,17 @@ Create a superuser
 
 	python manage.py createsuperuser
 
+enter in a username, email and password
+
 Running
 =======
 
 	python manage.py runserver [host:port]
-
 
 Now you can go to \<host\>:\<port\>/admin and login using the user created above. You can create groups and regular users that will be used to login into the playbook application (\<host\>:\<port\>/playbook).
 
 A main restriction is that the user's email must match the volunteer's email. It is through this relation that we can link a django user and the volunteer's informations. For now there is no database constraint ensuring this.
 
 
-Troubleshoot
-============
-### Error: pg_config executable not found.
-	
-Make sure PostGres is installed on your machine. (See step 3)
-
-=======
 There is also two other files that must be updated: playbook/email_settings.py (information concerning email service) and playbook/backlog/github_settings.py (information used to interact with the github API)
 
