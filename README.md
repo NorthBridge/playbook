@@ -153,4 +153,6 @@ Now you can go to \<host\>:\<port\>/admin and login using the user created above
 
 After logging into the admin interface, create a new user, using the same email you specified when running the static_inserts.sql file. The email field will be the link between the django auth user and the NorthBridge volunteer. Add the "Volunteers" group to the "Chosen groups" field of the user.
 
+Now you are ready to logout from admin account and access the application using the regular user you have created above.
+
 A main restriction is that the user's email must match the volunteer's email. It is through this relation that we can link a django user and the volunteer's informations. For now there is no database constraint ensuring this.
