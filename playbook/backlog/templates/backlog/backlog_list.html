@@ -193,7 +193,7 @@
                     <td>{{ backlog.module }}</td>
                     <td>{{ backlog.story_title }}</td>
                     <td id="status-{{ backlog.id }}">{{ backlog.status.name }}</td>
-                    <td id="sprint-name-{{ backlog.id }}">{{ backlog.sprint }}</td>
+                    <td id="sprint-name-{{ backlog.id }}">{{ backlog.sprint|default_if_none:"" }}</td>
                     <td id="update_dttm-{{ backlog.id }}" style="display: none;">{{ backlog.update_dttm|date:"c" }}</td>
                     <td>
                         <form method="post">{% csrf_token %}

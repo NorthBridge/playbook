@@ -42,10 +42,8 @@ class BacklogUpdateForm(forms.ModelForm):
             self.mark_fields_as_read_only()
         self.fields['sprint'].required = False
         self.fields['sprint'].queryset = self.get_sprint_options(self.instance)
-        try:
+        if self.instance.sprint:
             self.fields['sprint'].initial = self.instance.sprint.id
-        except Event.DoesNotExist:
-            pass
 
     def clean(self):
         if self.is_backlog_queued():
@@ -61,9 +59,9 @@ class BacklogUpdateForm(forms.ModelForm):
             self.fields[field].widget.attrs['readonly'] = True
 
     def get_sprint_options(self, backlog):
-        try:
+        if self.instance.sprint:
             current_sprint_id = self.instance.sprint.id
-        except Event.DoesNotExist:
+        else:
             current_sprint_id = None
         today = date.fromtimestamp(time.time())
         # FIXME: Hitting database twice. Is it really necessary?

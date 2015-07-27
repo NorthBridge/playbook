@@ -5,7 +5,7 @@ from . import Project, Event, Status, Team
 
 class Backlog(models.Model):
     project = models.ForeignKey(Project, db_column='project_id_fk', null=True)
-    sprint = models.ForeignKey(Event, db_column='sprint_id_fk')
+    sprint = models.ForeignKey(Event, db_column='sprint_id_fk', null=True)
     story_title = models.CharField(max_length=50)
     story_descr = models.CharField(max_length=2000, null=True)
     priority = models.CharField(max_length=1, null=True, default='9')
