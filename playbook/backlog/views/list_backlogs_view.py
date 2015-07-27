@@ -1,3 +1,4 @@
+import datetime
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
@@ -30,7 +31,6 @@ class BacklogView(RequireSignIn, View):
                                           status__id__in=[13, 14, 15],
                                           priority__in=['0', '1', '2'])\
             .order_by('project__name', 'priority', 'module', 'id')
-
         backlog_tuple = []
         for backlog in backlogs:
             read_only = backlog.status.id == QUEUED_STATUS
@@ -94,6 +94,7 @@ class BacklogView(RequireSignIn, View):
         if form.is_valid():
             form.save()
             backlog = Backlog.objects.get(id=backlog_id)
+            backlog.update_dttm = datetime.datetime.now()
             backlog.save()
             backlog.refresh_from_db()
             results['update_dttm'] = localtime(backlog.update_dttm)
@@ -123,6 +124,7 @@ class BacklogView(RequireSignIn, View):
                 if backlog.status.id == OPEN_STATUS:
                     status = Status.objects.get(id=SELECTED_STATUS)
                     backlog.status = status
+                backlog.update_dttm = datetime.datetime.now()
                 backlog.save()
                 export_to_github(backlog)
                 backlog.refresh_from_db()
@@ -160,6 +162,7 @@ class BacklogView(RequireSignIn, View):
                                                 prefix=prefix)
             if form.is_valid():
                 if formset.is_valid():
+                    backlog.update_dttm = datetime.datetime.now()
                     backlog = form.save()
                     backlog.refresh_from_db()
                     formset.save()

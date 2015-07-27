@@ -47,9 +47,14 @@ class CheckBacklogsView(RequireSignIn, View):
                         #  otherwise the page that executed the update
                         #  would show the message of requested refresh.
                         ui_last_update = parse_datetime(
-                            ui_backlog.get('lastUpdated')) +\
-                            datetime.timedelta(milliseconds=500)
+                            ui_backlog.get('lastUpdated'))
                         db_last_update = backlog.update_dttm
-                        if db_last_update > ui_last_update:
+
+                        if not ui_last_update and db_last_update:
                             result['outdated'] = True
+                        elif db_last_update:
+                            ui_last_update += datetime.timedelta(
+                                milliseconds=500)
+                            if db_last_update > ui_last_update:
+                                result['outdated'] = True
         return JsonResponse(result)
