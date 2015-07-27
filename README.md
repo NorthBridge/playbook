@@ -61,21 +61,24 @@ If you want to use a virtual environment you must do something like (Ubuntu):
 
 	# The next command is only necessary if you are not already using the created virtualenv
 	workon playbook
+	
+	* If it says "command not found", try typing: virtualenv virtualenv
+	* ls to confirm that "venv" is amongst your files.
+	* type: source venv/bin/activate to activate your virtual environment.
+	You should see (venv) before your project directory
 
-###### Ubuntu and Mac
-=======
-To install the dependencies for Windows you could type in the command below:
+######  Windows
 
 	python -m pip install
 
-To install the dependencies you could do something like this (Ubuntu):
+###### Ubuntu and Mac
 
 	pip install -r requirements.txt
 
 Second way: Use your global python environment
 
 	install the dependencies listed in requirements.txt using the easy_install utility
-	
+
 	example: easy_install psycopg2
 
 ###3) Install PostgreSQL
@@ -101,7 +104,15 @@ b) Add the path to ~/.profile
 
 4. update your database connection settings using your database admin user
 
-The database settings are located in the playbook/settings.py file and must be updated to represent your local environment. 
+The database settings are located in the playbook/settings.py file and must be updated to represent your local environment.
+
+* creat a passwords.py file in your playbook folder
+* gitignore it by adding it to bottom of the gitignore file
+* confirm with github that the file is not visible (not included in commit)
+* create variables and set them (name_of_database, user, password, host (localhost), port (5432))
+* save everything!
+
+
 
 create the database north6_devwaterwheel by running the following in the command line:
 
@@ -120,6 +131,7 @@ Set a password for the "postgres" database role using the command:
 OR configure to have your username and password in settings.py
 
 5. install django
+
 
 6. install the project
 
