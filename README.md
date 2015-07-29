@@ -153,7 +153,7 @@ The system can notify users through email when an error on modules import/export
 	
 The main functionality of the system is the integration with the GitHub API. In order to put this integration to work there are some pre-requirements that must be met:
 
-  - You must have an GitHub Organization
+  - You must have a GitHub Organization
   - The GitHub repositories must be inside this organization. Of course, a repository must exist before the system can interact with it.
   - You must create a "Personal access token":
     - Click on your GitHub profile picture and select "Settings"
