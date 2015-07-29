@@ -34,8 +34,9 @@ Installation
 
 ###1) Install python (2.7 or higher)
 
-	TODO: add Windows instructions
-	Installation on OSX: go to https://www.python.org/downloads/mac-osx/
+TODO: add Windows instructions
+
+Installation on OSX: go to https://www.python.org/downloads/mac-osx/
 
 ###2) Install project dependencies. There are two ways to do this:
 
@@ -74,14 +75,9 @@ You should see (venv) before your project directory
 
 ####2. Second way: Use your global python environment
 
-Directly install the dependencies listed in requirements.txt using pip or the easy_install utility.
+Directly install the dependencies listed in requirements.txt using pip or the easy_install utility. If you are using Mac you will have to configure psycopg2 setting up the file path for postgresql and then restart the terminal to avoid errors.
 
 ###3) Install PostgreSQL
-
-###### For OSX:
-Install postresql from http://postgresapp.com
-Open the terminal and type "sudo easy_install" + the name of each of the requirements in the requirement.txt file. 
-For psycopg2 you will have to set up the file path for postgress app and then restart the terminal to avoid errors.
 
 ###### Ubuntu
 
@@ -92,9 +88,8 @@ helpful link: https://help.ubuntu.com/community/PostgreSQL
 a) Download Postgres.app from http://postgresapp.com/
 
 b) Add the path to ~/.profile
-	
-	echo 'export PATH="/Applications/Postgres.app/Contents/Versions/9.4/bin:$PATH"' >> ~/.profile
 
+	echo 'export PATH="/Applications/Postgres.app/Contents/Versions/9.4/bin:$PATH"' >> ~/.profile
 	source ~/.profile
 
 ###4) Update your database connection settings using your database admin user
@@ -124,7 +119,7 @@ Create a superuser (you will be prompted to type in a username, email and passwo
 
 	python manage.py createsuperuser
 
-Use the static_inserts.sql file to populate the database with usefull testing information:
+Use the db/static_inserts.sql file to populate the database with usefull testing information:
 
 Open the file and update the lines below with your information:
 
@@ -142,6 +137,10 @@ After that, run the following command to import the data (you must be logged as 
 
 	psql northbr6_devwaterwheel < static_inserts.sql
 	
+We also must create a trigger that will be responsible for update the backlog.update_dttm field. This trigger will be fired on a row update event. The Postgres_Update_Trigger.sql script is located under the db folder.
+
+	psql northbr6_devwaterwheel_test < Postgres_Update_Trigger.sql
+
 There is also two other files that must be updated: playbook/email_settings.py (information concerning email service) and playbook/backlog/github_settings.py (information used to interact with the github API)
 
 Running
