@@ -3,10 +3,11 @@ import logging
 import traceback
 from pygithub3 import Github
 from ..github import create_milestone_data
-from ..constants import ACCEPT_ISSUE_LABEL, GH_ACTION
+from ..constants import ACCEPT_ISSUE_LABEL, GH_ACTION, GH_STATE, DB_STATUS
 from ..github_settings import GITHUB_OWNER, GITHUB_TOKEN
 from ...core.shortcuts import send_email
 from ...core.models import Backlog, Status
+from ..util import status_id
 
 logger = logging.getLogger("playbook")
 
@@ -33,8 +34,9 @@ def import_from_github(payload):
                 new_milestone_status = None
 
                 try:
-                    new_milestone_state = GH_ACTION[action]['gh_state']
-                    new_milestone_status = GH_ACTION[action]['db_status']
+                    new_milestone_state = GH_ACTION[action][GH_STATE]
+                    new_milestone_status = status_id(
+                        GH_ACTION[action][DB_STATUS])
 
                     __update_db(backlog, new_milestone_status)
                     __update_gh(backlog, new_milestone_state)

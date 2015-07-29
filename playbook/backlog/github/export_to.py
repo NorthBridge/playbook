@@ -1,8 +1,8 @@
 import logging
 import traceback
 from pygithub3 import Github
-from ..constants import QUEUED_STATUS, SELECTED_STATUS,\
-    STATIC_LABEL_VALUE, ACCEPT_ISSUE_TITLE, ACCEPT_ISSUE_LABEL
+from ..util import queued_status_id, selected_status_id
+from ..constants import ACCEPT_ISSUE_LABEL
 from ..github_settings import GITHUB_OWNER, GITHUB_TOKEN
 from ..github import create_milestone_data
 from ...core.models.backlog import Backlog, Status
@@ -11,6 +11,9 @@ from ...core.shortcuts import send_email
 
 logger = logging.getLogger("playbook")
 
+STATIC_LABEL_VALUE = 'acceptance criteria'
+ACCEPT_ISSUE_TITLE = 'Accept the story (milestone)'
+
 
 def export_to_github(backlog):
     __validate(backlog)
@@ -18,7 +21,7 @@ def export_to_github(backlog):
     github = Github(token=GITHUB_TOKEN, user=GITHUB_OWNER,
                     repo=backlog.github_repo)
 
-    if backlog.status.id == SELECTED_STATUS:
+    if backlog.status.id == selected_status_id():
         try:
             __export_milestone(backlog, github)
         except:
@@ -68,7 +71,7 @@ def __notify_export_problem(message, traceback=None, is_update=False):
 
 
 def __rollback_status(backlog):
-    status = Status.objects.get(id=SELECTED_STATUS)
+    status = Status.objects.get(id=selected_status_id())
     backlog.status = status
     backlog.save()
 
@@ -102,7 +105,7 @@ def __export_milestone(backlog, github):
         raise
     else:
         logger.info("Milestone exported to GitHub: %s", data)
-        status = Status.objects.get(id=QUEUED_STATUS)
+        status = Status.objects.get(id=queued_status_id())
         backlog.github_number = str(ghMilestone.number)
         backlog.status = status
         backlog.save()

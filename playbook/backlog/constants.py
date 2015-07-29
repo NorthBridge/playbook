@@ -1,25 +1,20 @@
 ACCEPT_ISSUE_LABEL = 'owner acceptance'
-ACCEPT_ISSUE_TITLE = 'Accept the story (milestone)'
-STATIC_LABEL_VALUE = 'acceptance criteria'
 
-OPEN_STATUS = 13
-SELECTED_STATUS = 14
-QUEUED_STATUS = 15
-ACCEPTED_STATUS = 16
+GH_STATE = 'gh_state'
+DB_STATUS = 'db_status'
 
-GH_CLOSED_STATE = 'closed'
-GH_OPEN_STATE = 'open'
-
-GH_CLOSED_ACTION = 'closed'
-GH_REOPENED_ACTION = 'reopened'
+DB_OPEN_STATUS_NAME = 'open'
+DB_SELECTED_STATUS_NAME = 'selected'
+DB_QUEUED_STATUS_NAME = 'queued'
+DB_ACCEPTED_STATUS_NAME = 'accepted'
 
 GH_ACTION = {
-    GH_CLOSED_ACTION: {
-        'db_status': ACCEPTED_STATUS,
-        'gh_state': GH_CLOSED_STATE
+    'closed': {
+        DB_STATUS: DB_ACCEPTED_STATUS_NAME,
+        GH_STATE: 'closed'
     },
-    GH_REOPENED_ACTION: {
-        'db_status': QUEUED_STATUS,
-        'gh_state': GH_OPEN_STATE
+    'reopened': {
+        DB_STATUS: DB_QUEUED_STATUS_NAME,
+        GH_STATE: 'open'
     }
 }

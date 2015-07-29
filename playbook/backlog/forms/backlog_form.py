@@ -6,7 +6,7 @@ from django.forms.models import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
 from ...core.models import Backlog, Estimate, Event,\
     AcceptanceCriteria
-from ..constants import QUEUED_STATUS
+from ..util import queued_status_id
 
 
 class EstimateForm(forms.ModelForm):
@@ -52,7 +52,7 @@ class BacklogUpdateForm(forms.ModelForm):
 
     def is_backlog_queued(self):
         return self.instance.id and\
-            self.instance.status.id == QUEUED_STATUS
+            self.instance.status.id == queued_status_id()
 
     def mark_fields_as_read_only(self):
         for field in self.fields:
@@ -67,10 +67,9 @@ class BacklogUpdateForm(forms.ModelForm):
         # FIXME: Hitting database twice. Is it really necessary?
         sprints = Event.objects.filter(Q(schedule=backlog.project.schedule),
                                        Q(end_dttm__gte=today) |
-                                       Q(id=current_sprint_id))\
-            .order_by('end_dttm')
+                                       Q(id=current_sprint_id))
         sprints_ids = sprints.values_list('id', flat=True)[:3]
-        return Event.objects.filter(id__in=sprints_ids)
+        return Event.objects.filter(id__in=sprints_ids).order_by('end_dttm')
 
     def save(self, commit=True):
         instance = super(BacklogUpdateForm, self).save(commit=False)
@@ -106,7 +105,7 @@ class AcceptanceCriteriaForm(forms.ModelForm):
 
     def is_backlog_queued(self):
         return self.instance.id and\
-            self.instance.backlog.status.id == QUEUED_STATUS
+            self.instance.backlog.status.id == queued_status_id()
 
     def mark_fields_as_read_only(self):
         for field in self.fields:
@@ -140,7 +139,7 @@ class CustomAcceptanceCriteriaFormSet(BaseInlineFormSet):
 
     def is_backlog_queued(self):
         return self.instance.id and\
-            self.instance.status.id == QUEUED_STATUS
+            self.instance.status.id == queued_status_id()
 
 AcceptanceCriteriaFormSet = inlineformset_factory(
     Backlog, AcceptanceCriteria, extra=1, form=AcceptanceCriteriaForm,
