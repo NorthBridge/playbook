@@ -112,16 +112,31 @@ class BacklogView(RequireSignIn, View):
                 # TODO: Should we validate if the user has privileges
                 #  over this backlog and sprint before updating?
                 backlog = Backlog.objects.get(id=backlog_id)
-                sprint = Event.objects.get(id=sprint_id)
-                team = Team.objects.get(id=team_id)
-                backlog.sprint = sprint
-                backlog.team = team
-                if backlog.status.id == open_status_id():
-                    status = Status.objects.get(id=selected_status_id())
-                    backlog.status = status
-                backlog.save()
-                export_to_github(backlog)
-                backlog.refresh_from_db()
+                # If the volunteer trying to update the sprint is not
+                #  a member of the team that first selected the backlog
+                #  then he/she is not allowed to execute the update.
+                if not backlog.team or team_id == backlog.team.id:
+                    sprint = Event.objects.get(id=sprint_id)
+                    team = Team.objects.get(id=team_id)
+                    backlog.sprint = sprint
+                    backlog.team = team
+                    if backlog.status.id == open_status_id():
+                        status = Status.objects.get(id=selected_status_id())
+                        backlog.status = status
+                    backlog.save()
+                    export_to_github(backlog)
+                    backlog.refresh_from_db()
+
+                    results['status'] = backlog.status.name
+                    if backlog.update_dttm:
+                        results['update_dttm'] = localtime(backlog.update_dttm)
+                    results['sprintName'] = str(sprint)
+                    results['success'] = True
+                else:
+                    results['errors'] = create_json_message_object(
+                        "This backlog was previously selected by another" +
+                        " team and can only be updated by a member of" +
+                        " that team.")
             except Event.DoesNotExist:
                 results['errors'] = create_json_message_object(
                     "Sprint does not exist.")
@@ -134,11 +149,6 @@ class BacklogView(RequireSignIn, View):
             except Exception as e:
                 results['errors'] = create_json_message_object(
                     str(e), code="exception")
-            else:
-                results['status'] = backlog.status.name
-                results['update_dttm'] = localtime(backlog.update_dttm)
-                results['sprintName'] = str(sprint)
-                results['success'] = True
 
     def update_backlog_and_acc_cri(self, request, results):
         backlog_id = request.POST.get('backlog-id')
