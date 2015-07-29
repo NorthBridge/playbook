@@ -10,10 +10,10 @@ class Volunteer(models.Model):
     email = models.CharField(max_length=255, default='NULL')
     fname = models.CharField(max_length=50, default='NULL')
     lname = models.CharField(max_length=50, null=True)
-    status_depr = models.CharField(max_length=10, null=True)
+    status_depr = models.CharField(max_length=10, null=True, blank=True)
     campaign = models.ForeignKey(Campaign, db_column='campaign_id_fk')
-    create_dttm = models.DateTimeField(default=datetime.now)
-    update_dttm = models.DateTimeField(null=True)
+    create_dttm = models.DateTimeField(default=datetime.now, editable=False)
+    update_dttm = models.DateTimeField(null=True, blank=True)
     descr = models.CharField(max_length=1000)
     status = models.ForeignKey(Status, db_column='status_id_fk')
 
