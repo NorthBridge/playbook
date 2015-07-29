@@ -13,7 +13,7 @@ class Backlog(models.Model):
     module = models.CharField(max_length=50, null=True)
     skills = models.CharField(max_length=50, null=True)
     notes = models.CharField(max_length=2000, null=True)
-    team = models.ForeignKey(Team, db_column='team_id_fk')
+    team = models.ForeignKey(Team, db_column='team_id_fk', null=True)
     github_number = models.CharField(max_length=5, null=True)
     github_repo = models.CharField(max_length=50, null=True)
     create_dttm = models.DateTimeField(default=datetime.now)
