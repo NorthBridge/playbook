@@ -67,11 +67,9 @@ The next command is only necessary if you are not already using the created virt
 * type: source venv/bin/activate to activate your virtual environment.
 You should see (venv) before your project directory
 
-##### Ubuntu and Mac
-	pip install -r requirements.txt
+Install python dependencies
 
-##### Windows
-	python -m pip install
+	pip install -r requirements.txt
 
 ####2. Second way: Use your global python environment
 
