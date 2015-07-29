@@ -3,7 +3,9 @@ import datetime
 from django.http import JsonResponse
 from django.views.generic import View
 from django.utils.dateparse import parse_datetime
-from ...core.models import Backlog, TeamProject
+from ..util.backlog_query_helper import \
+    retrieve_backlogs_by_status_project_and_priority
+from ...core.models import Backlog
 from ...core.views.mixins.requiresigninajax import RequireSignIn
 
 
@@ -17,12 +19,9 @@ class CheckBacklogsView(RequireSignIn, View):
         if ui_backlogs and team_id:
             ui_backlogs_count = len(ui_backlogs)
             # Same query executed in the BacklogView class
-            project_id_list = TeamProject.objects.filter(
-                team__id=team_id).values_list('project_id')
-            db_backlogs_count = Backlog.objects.filter(
-                project__id__in=project_id_list,
-                status__id__in=[13, 14, 15],
-                priority__in=['0', '1', '2']).count()
+            db_backlogs_count = \
+                retrieve_backlogs_by_status_project_and_priority(team_id)\
+                .count()
 
             # If the number of backlogs displayed to the user
             #  differs from the number that exists into database
