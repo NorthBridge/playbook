@@ -151,9 +151,7 @@ The system can notify users through email when an error on modules import/export
 	EMAIL_PORT = 587
 	EMAIL_RECIPIENT_LIST = ['exampleName2@gmail.com', 'exampleName3@yahoo.com']
 	
-The main functionality of the system is the integration with the GitHub API. In order to put this integration to work there are some pre-requirements that must be met.
-
-Pre-requirements:
+The main functionality of the system is the integration with the GitHub API. In order to put this integration to work there are some pre-requirements that must be met:
 
   - You must have an GitHub Organization
   - The GitHub repositories must be inside this organization. Of course, a repository must exist before the system can interact with it.
