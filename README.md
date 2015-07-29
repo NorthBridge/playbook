@@ -139,7 +139,46 @@ We also must create a trigger that will be responsible for update the backlog.up
 
 	psql northbr6_devwaterwheel_test < Postgres_Update_Trigger.sql
 
-There is also two other files that must be updated: playbook/email_settings.py (information concerning email service) and playbook/backlog/github_settings.py (information used to interact with the github API)
+There is also two other files that must be updated: playbook/email_settings.py (information concerning email service) and playbook/backlog/github_settings.py (information used to interact with the github API).
+
+The system can notify users through email when an error on modules import/export occurs. Configuration can be done in the file email_settings.py. As an example, to send the emails using gmail service, one could configure the file as shown below:
+
+	# Email configuration
+	EMAIL_USE_TLS = True
+	EMAIL_HOST = 'smtp.gmail.com'
+	EMAIL_HOST_USER = 'exampleName@gmail.com'
+	EMAIL_HOST_PASSWORD = 'myPassword'
+	EMAIL_PORT = 587
+	EMAIL_RECIPIENT_LIST = ['exampleName2@gmail.com', 'exampleName3@yahoo.com']
+	
+The main functionality of the system is the integration with the GitHub API. In order to put this integration to work there are some pre-requirements that must be met:
+
+  - You must have a GitHub Organization
+  - The GitHub repositories must be inside this organization. Of course, a repository must exist before the system can interact with it.
+  - You must create a "Personal access token":
+    - Click on your GitHub profile picture and select "Settings"
+    - Chose "Personal access tokens" on the left menu
+    - Chose a description for the token
+    - Select the scopes: repo, public_repo, user, gist
+    - Click "Generate token"
+    - Copy the generated token as we will use it later (warning: You cannot access the generated token after leaving the page so be careful to store it elsewhere)
+  - You must configure a GitHub webhook inside the Organization:
+    - The Payload URL must point to: 
+      - If you are running over HTTP (for example, through manage.py script):
+        - http://\<host\>:\<port\>/playbook/backlog/githubimport
+      - If you want to use HTTPS (the HTTP server must be configured):
+        - https://\<host\>:\<port\>/playbook/backlog/githubimport
+        - Remember to "Disable SSL verification" if you have a self signed certificate
+    - Content type: application/json
+    - Secret: chose a strong secret
+    - Which events would you like to trigger this webhook?
+      - Choose "Let me select individual events" and check the "Issues" event.
+
+Now we can configure the github_settings.py file:
+
+	GITHUB_OWNER = "\<GitHub Organization\>"
+	GITHUB_TOKEN = "\<GitHub generated token\>"
+	GITHUB_WEBHOOK_SECRET = "\<The secret you created on GitHub\>"
 
 Running
 =======
