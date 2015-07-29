@@ -1,4 +1,3 @@
-import datetime
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
@@ -6,13 +5,15 @@ from django.template import RequestContext
 from django.http import JsonResponse
 from django.views.generic import View
 from django.utils.timezone import localtime
-from ...core.models import Backlog, Estimate, Event, Status, Team, TeamProject
+from ..util.backlog_query_helper import\
+    retrieve_backlogs_by_status_project_and_priority
+from ..github.export_to import export_to_github
+from ..util import open_status_id, selected_status_id, queued_status_id
+from ...core.models import Backlog, Estimate, Event, Status, Team
 from ...core.shortcuts import create_json_message_object
 from ...backlog.forms.backlog_form import AcceptanceCriteriaFormSet,\
     EstimateForm, BacklogUpdateForm
 from ...core.views.mixins.requiresigninajax import RequireSignIn
-from ..github.export_to import export_to_github
-from ..constants import OPEN_STATUS, SELECTED_STATUS, QUEUED_STATUS
 
 
 class BacklogView(RequireSignIn, View):
@@ -23,17 +24,12 @@ class BacklogView(RequireSignIn, View):
         # Redirects to the index page if there is no team associated
         if team_id is None:
             return redirect(reverse('index'))
-
         # From here now we have all we need to list the backlogs
-        project_id_list = TeamProject.objects.filter(
-            team__id=team_id).values_list('project_id')
-        backlogs = Backlog.objects.filter(project__id__in=project_id_list,
-                                          status__id__in=[13, 14, 15],
-                                          priority__in=['0', '1', '2'])\
+        backlogs = retrieve_backlogs_by_status_project_and_priority(team_id)\
             .order_by('project__name', 'priority', 'module', 'id')
         backlog_tuple = []
         for backlog in backlogs:
-            read_only = backlog.status.id == QUEUED_STATUS
+            read_only = backlog.status.id == queued_status_id()
 
             try:
                 estimate = Estimate.objects.get(team_id=team_id,
@@ -94,7 +90,6 @@ class BacklogView(RequireSignIn, View):
         if form.is_valid():
             form.save()
             backlog = Backlog.objects.get(id=backlog_id)
-            backlog.update_dttm = datetime.datetime.now()
             backlog.save()
             backlog.refresh_from_db()
             results['update_dttm'] = localtime(backlog.update_dttm)
@@ -121,10 +116,9 @@ class BacklogView(RequireSignIn, View):
                 team = Team.objects.get(id=team_id)
                 backlog.sprint = sprint
                 backlog.team = team
-                if backlog.status.id == OPEN_STATUS:
-                    status = Status.objects.get(id=SELECTED_STATUS)
+                if backlog.status.id == open_status_id():
+                    status = Status.objects.get(id=selected_status_id())
                     backlog.status = status
-                backlog.update_dttm = datetime.datetime.now()
                 backlog.save()
                 export_to_github(backlog)
                 backlog.refresh_from_db()
@@ -162,7 +156,6 @@ class BacklogView(RequireSignIn, View):
                                                 prefix=prefix)
             if form.is_valid():
                 if formset.is_valid():
-                    backlog.update_dttm = datetime.datetime.now()
                     backlog = form.save()
                     backlog.refresh_from_db()
                     formset.save()
