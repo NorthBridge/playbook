@@ -55,13 +55,18 @@ class BacklogUpdateForm(forms.ModelForm):
             current_sprint_id = self.instance.sprint.id
         else:
             current_sprint_id = None
+
         today = date.fromtimestamp(time.time())
-        # FIXME: Hitting database twice. Is it really necessary?
-        sprints = Event.objects.filter(Q(schedule=backlog.project.schedule),
-                                       Q(end_dttm__gte=today) |
-                                       Q(id=current_sprint_id))
-        sprints_ids = sprints.values_list('id', flat=True)[:3]
-        return Event.objects.filter(id__in=sprints_ids).order_by('end_dttm')
+
+        # event.schedule == backlog.project.schedule and
+        #  (event.end_dttm >= today or event.id == backlog.sprint.id)
+        sprints = Event.objects.filter(
+            Q(schedule=backlog.project.schedule),
+            Q(end_dttm__gte=today) | Q(id=current_sprint_id))\
+            .order_by('end_dttm')
+
+        # Returns only the first three sprints in the list
+        return sprints[:3]
 
     def save(self, commit=True):
         instance = super(BacklogUpdateForm, self).save(commit=False)
