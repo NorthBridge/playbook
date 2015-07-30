@@ -4,9 +4,9 @@ from django import forms
 from django.db.models import Q
 from django.forms.models import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
-from ...core.models import Backlog, Estimate, Event,\
-    AcceptanceCriteria
-from ..util import queued_status_id
+from .util import queued_status_id
+from ..core.models import (Backlog, Estimate, Event,
+                           AcceptanceCriteria)
 
 
 class EstimateForm(forms.ModelForm):
@@ -39,24 +39,16 @@ class BacklogUpdateForm(forms.ModelForm):
         self.read_only = kwargs.pop('read_only', False)
         super(BacklogUpdateForm, self).__init__(*args, **kwargs)
         if self.read_only:
-            self.mark_fields_as_read_only()
+            mark_fields_as_read_only(self)
         self.fields['sprint'].required = False
         self.fields['sprint'].queryset = self.get_sprint_options(self.instance)
         if self.instance.sprint:
             self.fields['sprint'].initial = self.instance.sprint.id
 
     def clean(self):
-        if self.is_backlog_queued():
+        if is_backlog_queued(self.instance):
             raise forms.ValidationError("A queued backlog cannot be edited.",
                                         code='not_editable')
-
-    def is_backlog_queued(self):
-        return self.instance.id and\
-            self.instance.status.id == queued_status_id()
-
-    def mark_fields_as_read_only(self):
-        for field in self.fields:
-            self.fields[field].widget.attrs['readonly'] = True
 
     def get_sprint_options(self, backlog):
         if self.instance.sprint:
@@ -100,16 +92,8 @@ class AcceptanceCriteriaForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(AcceptanceCriteriaForm, self).__init__(*args, **kwargs)
-        if self.is_backlog_queued():
-            self.mark_fields_as_read_only()
-
-    def is_backlog_queued(self):
-        return self.instance.id and\
-            self.instance.backlog.status.id == queued_status_id()
-
-    def mark_fields_as_read_only(self):
-        for field in self.fields:
-            self.fields[field].widget.attrs['readonly'] = True
+        if self.instance.id and is_backlog_queued(self.instance.backlog):
+            mark_fields_as_read_only(self)
 
     def save(self, commit=True):
         instance = super(AcceptanceCriteriaForm, self).save(commit=False)
@@ -129,18 +113,24 @@ class CustomAcceptanceCriteriaFormSet(BaseInlineFormSet):
         super(CustomAcceptanceCriteriaFormSet, self).__init__(
             data=data, files=files, instance=instance, save_as_new=save_as_new,
             prefix=prefix, queryset=queryset, **kwargs)
-        if self.is_backlog_queued():
+        if is_backlog_queued(self.instance):
             self.extra = 0
 
     def clean(self):
-        if self.is_backlog_queued():
+        if is_backlog_queued(self.instance):
             raise forms.ValidationError("A queued backlog cannot be edited.",
                                         code='not_editable')
-
-    def is_backlog_queued(self):
-        return self.instance.id and\
-            self.instance.status.id == queued_status_id()
 
 AcceptanceCriteriaFormSet = inlineformset_factory(
     Backlog, AcceptanceCriteria, extra=1, form=AcceptanceCriteriaForm,
     formset=CustomAcceptanceCriteriaFormSet)
+
+
+def is_backlog_queued(backlog):
+    return backlog.id and\
+        backlog.status.id == queued_status_id()
+
+
+def mark_fields_as_read_only(form):
+    for field in form.fields:
+        form.fields[field].widget.attrs['readonly'] = True
