@@ -5,13 +5,12 @@ from django.template import RequestContext
 from django.http import JsonResponse
 from django.views.generic import View
 from django.utils.timezone import localtime
-from ..util.backlog_query_helper import\
-    retrieve_backlogs_by_status_project_and_priority
 from ..github.export_to import export_to_github
-from ..util import open_status_id, selected_status_id, queued_status_id
+from ..util import open_status_id, selected_status_id, queued_status_id,\
+    retrieve_backlogs_by_status_project_and_priority
 from ...core.models import Backlog, Estimate, Event, Status, Team
 from ...core.shortcuts import create_json_message_object
-from ...backlog.forms.backlog_form import AcceptanceCriteriaFormSet,\
+from ...backlog.forms import AcceptanceCriteriaFormSet,\
     EstimateForm, BacklogUpdateForm
 from ...core.views.mixins.requiresigninajax import RequireSignIn
 
