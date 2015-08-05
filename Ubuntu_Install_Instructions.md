@@ -73,6 +73,8 @@ Create the database north6_devwaterwheel by running the following SQL command (y
 	psql
 	create database northbr6_devwaterwheel;
 
+After you are done with setting up the database you can log out by Ctrl+D twice OR until you see that your back in your virtual environment, you see (playbook).
+
 *In case you need to change your password for user posgres:
 
 	sudo -u postgres psql postgres
@@ -81,11 +83,10 @@ Now that you are connected to psql you can change your password to 'postgres':
 
 	\password postgres
 
-After you are done with setting up the database you can log out by Ctrl+D twice OR until you see that your back in your virtual environment, you see (playbook).
 
 ###5) Configure Django
 
-Run Django migration scripts
+Run Django migration scripts (only AFTER database is setup/configured):
 
 	python manage.py makemigrations
 	python manage.py migrate
