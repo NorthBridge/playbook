@@ -27,11 +27,6 @@ Go to the project directory: Make sure you are in the directory playbook (if you
 The next command is only necessary if you are not already using the created virtualenv
 
 	workon playbook
-	
-* If it says "command not found", try typing: virtualenv virtualenv
-* ls to confirm that "venv" is amongst your files.
-* type: source venv/bin/activate to activate your virtual environment.
-You should see (venv) before your project directory
 
 Install python dependencies
 
