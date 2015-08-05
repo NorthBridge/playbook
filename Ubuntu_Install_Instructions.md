@@ -24,11 +24,16 @@ Close the file and source it:
 Go to the project directory: Make sure you are in the directory playbook (if you do "ls" in your command line you will find there is another folder called playbook. Don't go in there. Stay here.)
 
 	mkvirtualenv playbook
+
 The next command is only necessary if you are not already using the created virtualenv
 
 	workon playbook
 
-Install python dependencies
+*to get out of the virtual environment type in:
+	
+	deactivate
+
+Install python dependencies (while in virtual environment aka (playbook)):
 
 	pip install -r requirements.txt
 
