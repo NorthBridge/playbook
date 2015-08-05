@@ -73,7 +73,7 @@ Create the database north6_devwaterwheel by running the following SQL command (y
 	psql
 	create database northbr6_devwaterwheel;
 
-After you are done with setting up the database you can log out by Ctrl+D twice OR until you see that your back in your virtual environment, you see (playbook).
+After you are done with setting up the database you can log out by Ctrl+D twice OR until you see that your back in your virtual environment, you see (playbook). You should always see (playbook) unless in postgres. 
 
 *In case you need to change your password for user posgres:
 
