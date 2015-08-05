@@ -100,7 +100,7 @@ Create a superuser (you will be prompted to type in a username, email and passwo
 
 Use the db/static_inserts.sql file to populate the database with useful testing information:
 
-Open the file and update the lines below with your information:
+Open the file (db/static_inserts.sql) and update the lines below with your information:
 
 	\set email '\'' '\<The email you used to create the django account>' '\''
 	\set fname '\'' '\<your first name>' '\''
@@ -121,6 +121,9 @@ After that, run the following command to import the data (you must be logged as 
 We also must create a trigger that will be responsible for update the backlog.update_dttm field. This trigger will be fired on a row update event. The Postgres_Update_Trigger.sql script is located under the db folder.
 
 	psql northbr6_devwaterwheel_test < /home/path/to/playbook/db/Postgres_Update_Trigger.sql
+
+
+-------TO EDIT FURTHER -----
 
 
 There is also two other files that must be updated: playbook/email_settings.py (information concerning email service) and playbook/backlog/github_settings.py (information used to interact with the github API).
