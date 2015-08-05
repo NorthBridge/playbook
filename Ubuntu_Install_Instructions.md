@@ -38,6 +38,7 @@ Install python dependencies
 	pip install -r requirements.txt
 
 *Running this installs the following packages to your virtual environment (only in playbook):
+	
 	Django==1.8.2
 	ipaddress==1.0.7
 	psycopg2==2.6.1
