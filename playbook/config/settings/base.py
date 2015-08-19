@@ -86,13 +86,11 @@ SESSION_COOKIE_AGE = 10 * 60  # 10 minutes
 DATABASES = {
     'default': {
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': 'localwaterwheel',
-    #'USER': 'postgres',
-    #'PASSWORD': 'beloved',
-    'USER': 'northbr6_alliance_django',
-    'PASSWORD': 'northbr6',
-    'HOST': '127.0.0.1',
-    'PORT': '5432',
+    'NAME': os.environ['PLAYBOOK_DB_NAME'],
+    'USER': os.environ['PLAYBOOK_DB_USER'],
+    'PASSWORD': os.environ['PLAYBOOK_DB_PASSWORD'],
+    'HOST': os.environ['PLAYBOOK_DB_HOST'],
+    'PORT': os.environ['PLAYBOOK_DB_PORT'],
     }
 }
 
@@ -118,4 +116,17 @@ STATIC_URL = '/static/'
 
 INTERNAL_IPS = ('127.0.0.1',)
 
-from email_settings import *
+# Email configuration
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = os.environ['SMTP_SERVER']
+EMAIL_HOST_USER = os.environ['SMTP_USER']
+EMAIL_HOST_PASSWORD = os.environ['SMTP_PASSWORD']
+EMAIL_PORT = os.environ['SMTP_PORT']
+EMAIL_RECIPIENT_LIST = os.environ['EMAIL_HOST_USER']
+
+# Github configuration
+
+GITHUB_OWNER = environ['PLAYBOOK_GITHUB_OWNER']
+GITHUB_TOKEN = environ['PLAYBOOK_GITHUB_TOKEN']
+GITHUB_WEBHOOK_SECRET = environ['PLAYBOOK_GITHUB_WEBHOOK_SECRET']

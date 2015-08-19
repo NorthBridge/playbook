@@ -2,9 +2,6 @@
 
 *~
 
-# Configuration file.
-*CONFIG
-
 # Compiled python modules.
 *.pyc
 
