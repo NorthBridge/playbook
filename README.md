@@ -1,3 +1,13 @@
+# The Problem 
+
+GitHub provides lots of essential things that are needed in order to collaborate productively in an open-source, decentralized way: self managed user accounts, teams, messaging, task management, and even simple burndown charting. There is one component that Northbridge Technology Alliance needs in order to make GitHub hit the sweet spot of our agile development methodology, and that is backlog management.
+
+This project provides a web-based backlog that Northbridge uses to prioritize all of our volunteer work across several projects. When a team selects a user story to accomplish, a button push exports the story into GitHub as a milestone and the associated acceptance criteria as tasks associated to that milestone.
+
+Upon completion of the milestone, a GitHub API web hook is used to signal that the story is complete, and our backlog is udated accordingly.
+
+We have researched lots of task management tools, and there are some very nice ones available. However they generally required the construction of a rather siloed user base. Northbridge wants to leverage the user infrastructure of GitHub, and all the other GitHub goodness. So this project give us the backlog we need in order to do that seamlessly.
+
 # Overview
 
 This repository wiki describes Northbridge agile team processes.
