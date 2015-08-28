@@ -1,13 +1,17 @@
 import json
 import logging
 import traceback
+
 from pygithub3 import Github
-from ..github import create_milestone_data
+
+from django.conf import settings
+
+from ..github.milestone import create_milestone_data
 from ..constants import ACCEPT_ISSUE_LABEL, GH_ACTION, GH_STATE, DB_STATUS
-from ..github_settings import GITHUB_OWNER, GITHUB_TOKEN
-from ...core.shortcuts import send_email
-from ...core.models import Backlog, Status
 from ..util import status_id
+
+from apps.shared.models import Backlog, Status
+from core.lib.shortcuts import send_email
 
 logger = logging.getLogger("playbook")
 
@@ -88,7 +92,7 @@ def __update_db(backlog, status_id):
 
 
 def __update_gh(backlog, new_state):
-    github = Github(token=GITHUB_TOKEN, user=GITHUB_OWNER,
+    github = Github(token=settings.GITHUB_TOKEN, user=settings.GITHUB_OWNER,
                     repo=backlog.github_repo)
     data = create_milestone_data(backlog, new_state)
     github.issues.milestones.update(backlog.github_number, data)

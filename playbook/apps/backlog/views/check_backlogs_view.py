@@ -4,8 +4,8 @@ from django.http import JsonResponse
 from django.views.generic import View
 from django.utils.dateparse import parse_datetime
 from ..util import retrieve_backlogs_by_status_project_and_priority
-from ...core.models import Backlog
-from ...core.views.mixins.requiresigninajax import RequireSignIn
+from apps.shared.models import Backlog
+from apps.shared.views.mixins.requiresigninajax import RequireSignIn
 
 
 class CheckBacklogsView(RequireSignIn, View):

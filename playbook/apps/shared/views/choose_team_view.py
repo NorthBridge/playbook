@@ -1,10 +1,10 @@
 from django.http import JsonResponse
 from django.views.generic import View
 from django.template.loader import render_to_string
-from ...core.models import Team
-from ...core.shortcuts import create_json_message_object
-from ...core.forms.choose_team_form import ChooseTeamForm
-from ...core.views.mixins.requiresigninajax import RequireSignIn
+from apps.shared.models import Team
+from core.lib.shortcuts import create_json_message_object
+from apps.shared.forms.choose_team_form import ChooseTeamForm
+from apps.shared.views.mixins.requiresigninajax import RequireSignIn
 
 
 class ChooseTeam(RequireSignIn, View):

@@ -4,15 +4,13 @@ import logging.config
 from json import loads
 from hashlib import sha1
 from ipaddress import ip_address, ip_network
+from django.conf import settings
 from django.http import HttpResponse
 from django.views.generic import View
 from django.core.exceptions import PermissionDenied
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-try:
-    from ..github_settings import GITHUB_WEBHOOK_SECRET
-except ImportError:
-    GITHUB_WEBHOOK_SECRET = None
+
 from ..github.import_from import import_from_github
 
 
@@ -54,7 +52,7 @@ class GitHubWebhookView(View):
     #  (in this case, Django will return an HttpResponse with status
     #  code = 403).
     def verify_signature(self, request):
-        if GITHUB_WEBHOOK_SECRET:
+        if settings.GITHUB_WEBHOOK_SECRET:
             try:
                 sha_name, signature = request.META.get(
                     self.meta_key_formatter('X-Hub-Signature')).split('=')
@@ -70,7 +68,7 @@ class GitHubWebhookView(View):
                     return HttpResponse("Only sha1 hash algorithm is" +
                                         " accepted.", status=501)
 
-                mac = hmac.new(GITHUB_WEBHOOK_SECRET, request.body,
+                mac = hmac.new(settings.GITHUB_WEBHOOK_SECRET, request.body,
                                digestmod=sha1)
                 if not hmac.compare_digest(str(mac.hexdigest()),
                                            str(signature)):

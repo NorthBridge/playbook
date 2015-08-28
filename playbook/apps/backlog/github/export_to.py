@@ -1,13 +1,16 @@
 import logging
 import traceback
 from pygithub3 import Github
+
+from django.conf import settings
+
+from .milestone import create_milestone_data
 from ..util import queued_status_id, selected_status_id
 from ..constants import ACCEPT_ISSUE_LABEL
-from ..github_settings import GITHUB_OWNER, GITHUB_TOKEN
-from ..github import create_milestone_data
-from playbook.apps.core.models.backlog import Backlog, Status
-from playbook.apps.core.models.acceptance_criteria import AcceptanceCriteria
-from playbook.apps.core.shortcuts import send_email
+
+from apps.shared.models.backlog import Backlog, Status
+from apps.shared.models.acceptance_criteria import AcceptanceCriteria
+from core.lib.shortcuts import send_email
 
 logger = logging.getLogger("playbook")
 
@@ -18,7 +21,7 @@ ACCEPT_ISSUE_TITLE = 'Accept the story (milestone)'
 def export_to_github(backlog):
     __validate(backlog)
 
-    github = Github(token=GITHUB_TOKEN, user=GITHUB_OWNER,
+    github = Github(token=settings.GITHUB_TOKEN, user=settings.GITHUB_OWNER,
                     repo=backlog.github_repo)
 
     if backlog.status.id == selected_status_id():

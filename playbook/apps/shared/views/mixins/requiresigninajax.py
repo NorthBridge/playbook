@@ -1,5 +1,5 @@
 from django.utils.decorators import method_decorator
-from ....core.lib.ajax import login_required
+from core.lib.ajax import login_required
 
 
 class RequireSignIn(object):

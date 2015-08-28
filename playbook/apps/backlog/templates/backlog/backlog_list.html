@@ -14,7 +14,7 @@
                     deleteText: "Remove Criterion"
                 })
             });
-            
+
             $("#backlog-table > tbody > tr:odd")
             .each(function (i) {
                 $(this).addClass("odd");
@@ -29,32 +29,32 @@
             .each(function (i) {
                 $(this).show();
             });
-            
+
             $("#backlog-table tr.odd").click(function(){
                 $(this).next("tr").toggle();
                 $(this).find(".arrow").toggleClass("up");
             });
 
-            $("[name='action-update-estimate']").click( function(e) { 
+            $("[name='action-update-estimate']").click( function(e) {
                 e.preventDefault();
                 e.stopPropagation();
             });
 
-            $("[name='action-save']").click( function(e) { 
+            $("[name='action-save']").click( function(e) {
                 e.preventDefault();
             });
 
-            $("[name='action-select-sprint']").click( function(e) { 
+            $("[name='action-select-sprint']").click( function(e) {
                 e.preventDefault();
             });
 
-            $("[name='estimate-estimate']").click( function(e) { 
+            $("[name='estimate-estimate']").click( function(e) {
                     e.stopPropagation();
             });
 
             $("#messages").hide();
         });
-        
+
         setInterval(function() {checkUpdates();}, 30000);
 
         function getFormsetPrefix(form) {
@@ -179,7 +179,7 @@
         <table id="backlog-table">
             <tr>
                 <th>Priority</th>
-                <th>Project</th>    
+                <th>Project</th>
                 <th>Module</th>
                 <th>Story Title</th>
                 <th>Status</th>

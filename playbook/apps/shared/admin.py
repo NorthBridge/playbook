@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Backlog, Event, Team, AcceptanceCriteria, Status,\
+from apps.shared.models import Backlog, Event, Team, AcceptanceCriteria, Status,\
     Application, Campaign, Estimate, Project, Schedule, TeamProject,\
     TeamVolunteer, Volunteer
 

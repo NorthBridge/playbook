@@ -3,7 +3,6 @@ from ..models import Team
 
 
 class ChooseTeamForm(forms.Form):
-
     team = forms.ChoiceField(choices=[], widget=forms.Select(),
                              required=True, label='Choose a Team')
 

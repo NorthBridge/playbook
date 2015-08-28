@@ -15,14 +15,15 @@ Including another URLconf
 """
 from django.contrib.auth.views import login, logout
 from django.conf.urls import include, url
+from django.conf import settings
 from django.contrib import admin
-from .core import views
+from core import views
 
 urlpatterns = [
     url(r'^accounts/login/$', login, name='login'),
     url(r'^accounts/logout/$', logout, name='logout'),
-    url(r'^playbook/$', views.index, name='index'),
-    url(r'^playbook/backlog/', include('playbook.apps.backlog.urls')),
-    url(r'^playbook/core/', include('playbook.apps.core.urls')),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^playbook/backlog/', include('apps.backlog.urls')),
+    url(r'^playbook/core/', include('apps.shared.urls')),
+    url(r'^admin/', include(admin.site.urls))
 ]
+

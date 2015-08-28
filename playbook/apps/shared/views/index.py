@@ -1,13 +1,12 @@
 from django.shortcuts import render
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
-from ...core.models import Team
-from ..forms.choose_team_form import ChooseTeamForm
+from apps.shared.models import Team
+from apps.shared.forms.choose_team_form import ChooseTeamForm
 
 
 @login_required
 def index(request):
-
     if request.method == 'POST':
         form = ChooseTeamForm(request, request.POST)
         if form.is_valid():
@@ -28,4 +27,5 @@ def index(request):
             context = RequestContext(request, {'teams': teams,
                                                'form': form})
             return render(request, 'core/index.html', context)
+
     return render(request, 'core/index.html')
