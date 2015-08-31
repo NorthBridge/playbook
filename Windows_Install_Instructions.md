@@ -6,7 +6,10 @@ Installation
 
 	https://www.python.org/downloads/release/python-2710/
 
-Go to your environment variables and make the variable "PYTHON_HOME" in user variable with path: "C:\Python27"
+Go to your environment variables and make the variable "PYTHON_HOME" in user variable with path:
+
+	 C:\Python27
+	 
 In Path (system variables) add the following: 
 	
 	;%PYTHON_HOME%;%PYTHON_HOME%/Scripts;
