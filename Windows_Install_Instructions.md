@@ -55,6 +55,7 @@ Install python dependencies (while in virtual environment aka (playbook)):
 	msiexec/i C:\Users\\Downloads\VCForPython27.msi ALLUSERS=1
 
 ###3) Install PostgreSQL: http://www.postgresql.org/download/windows/
+Go to your environment variables and add postgres to the PATH. (Should look something like C:\Program Files\PostgreSQL\9.x\bin;)
 
 ###4) Update your database connection settings using your database admin user
 
