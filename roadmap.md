@@ -1,8 +1,8 @@
 **Initial project frame-up - August 2015**
 
 Achieved August 2015 by the work of summer intern Bruno Godoy with a basic list of feature descriptions
-* Process Specs
-* UI Specs
+* [Initial Process Specs](http://northbridgetech.org/downloads/alliance_process_specs.pdf)
+* [Initial UI Specs](http://northbridgetech.org/downloads/alliance_ui_specs.pdf)
   
 (These will change over time, this is just the initial project offering)
 
