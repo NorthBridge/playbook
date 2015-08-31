@@ -2,29 +2,29 @@
 Installation
 ============
 
-###1) Install python (2.7 or higher)
+###1) Install python 2.7.x (Currently 2.7.10 is the latest version). Install the appropriate python according to how many bits your computer has. Link below:
+
+	https://www.python.org/downloads/release/python-2710/
 
 ###2) Install project dependencies. There are two ways to do this:
 
-Use a virtual environment (Ubuntu):
 
-Install pip
 
-	sudo apt-get install python-pip
+Install pip. Download get-pip.py and save (this will probably go into your Downloads Folder)
 
-Install virtualenv using pip
+	https://bootstrap.pypa.io/get-pip.py
 
-	pip install virtualenvwrapper
+Once downloaded go into cmd:
 
-Add the following two lines to your ~/.bashrc script:
+	cd ~/Downloads
+	python get-pip.py
 
-    export WORKON_HOME=$HOME/.virtualenvs
-    source /usr/local/bin/virtualenvwrapper.sh
+Go to the Environment variables and make variable "PYTHON_HOME" in systems variables with path "C:\Python27"
 
-Close the file and source it:
+cmd:
+	pip install virtualenvwrapper-win
 
-	source ~/.bashrc
-
+	
 Go to the project directory: Make sure you are in the directory playbook (if you do "ls" in your command line you will find there is another folder called playbook. Don't go in there. Stay here.)
 
 	mkvirtualenv playbook
@@ -49,19 +49,18 @@ Install python dependencies (while in virtual environment aka (playbook)):
 	pygithub3==0.5.1
 	requests==2.7.0
 
-###3) Install PostgreSQL
 
-Currently 9.4 is the most current release of postgres:
+**If you get an error about psycopg2, go to: http://aka.ms/vcpython27 & download. Run the following command and retry to install the requirements again.
 
-	sudo apt-get install postgresql-9.4
+	msiexec/i C:\Users\\Downloads\VCForPython27.msi ALLUSERS=1
 
-helpful link: https://help.ubuntu.com/community/PostgreSQL
+###3) Install PostgreSQL: http://www.postgresql.org/download/windows/
 
 ###4) Update your database connection settings using your database admin user
 
-The database settings are located in the playbook/settings.py file and must be updated to represent your local environment. You can name your database whatever you like. In this guide, we assume that the name is northbr6_devwaterwheel
+The database settings are located in the playbook/settings.py file and must be updated to represent your local environment. 
 
-*This means go into playbook/settings.py and look for the DATABASE section:
+*This means go into playbook/settings.py and look for the DATABASE section. should look something like:
 	
 	DATABASES = {
     'default': {
@@ -74,24 +73,14 @@ The database settings are located in the playbook/settings.py file and must be u
     	}
 	}
 
-This is assuming that you are using user postgres with password postgres with port 5432 and database northbr6_devwaterwheel. However you can use whatever you like so long as things match. In this tutorial we will be using the above stated assumptions.
+*Make sure that your user, password, host, and port match how everything is set up on postgres on your local machine. Name corresponds to the name of the database which we create below in the next section:
 
- 
 Create the database north6_devwaterwheel by running the following SQL command (you can use psql or any client of your choice). First you must sign into the postgres user (if prompt for a password when getting into the postgres superuser type in your computer password:
 
-	sudo su - postgres
-	psql
+	psql -U postgres
 	create database northbr6_devwaterwheel;
 
-After you are done with setting up the database you can log out by Ctrl+D twice OR until you see that your back in your virtual environment, you see (playbook). You should always see (playbook) unless in postgres. 
-
-*In case you need to change your password for user posgres:
-
-	sudo -u postgres psql postgres
-
-Now that you are connected to psql you can change your password to 'postgres':
-
-	\password postgres
+After you are done with setting up the database you can log out by running exit() & you see that your back in your virtual environment, you see (playbook). You should always see (playbook) unless in postgres. 
 
 
 ###5) Configure Django
@@ -123,15 +112,18 @@ For example:
 
 After that, run the following command to import the data (you must be logged as a user that has privileges to access/update the database or provide user/password information to psql):
 
-	sudo su - postgres
-    psql northbr6_devwaterwheel < /home/path/to/playbook/db/static_inserts.sql
+	
+    psql -U postgres -f db/static_inserts.sql northbr6_devwaterwheel
 
 	
 We also must create a trigger that will be responsible for update the backlog.update_dttm field. This trigger will be fired on a row update event. The Postgres_Update_Trigger.sql script is located under the db folder.
 
-	psql northbr6_devwaterwheel_test < /home/path/to/playbook/db/Postgres_Update_Trigger.sql
+	psql -U postgres db/Postgres_Update_Trigger.sql northbr6_devwaterwheel
+
 
 There is also two other files that must be updated: playbook/email_settings.py (information concerning email service) and playbook/backlog/github_settings.py (information used to interact with the github API).
+
+
 
 The system can notify users through email when an error on modules import/export occurs. Configuration can be done in the file email_settings.py. As an example, to send the emails using gmail service, one could configure the file as shown below:
 
@@ -168,11 +160,11 @@ The Payload URL must point to:
   	
   	http://\<host\>:\<port\>/playbook/backlog/githubimport
 
-install ngrok: https://ngrok.com/download
+Install ngrok: https://ngrok.com/download
 -first download and then unzip
--you can extract it in your downloads folder and then run it:
+-you can extract it in your downloads folder and then run it by double clicking on ngrok.exe. Run the following in the ngrok terminal:
 
-	~/Downloads/ngrok http 8000
+	ngrok http 8000 
 
 
 Something like this will pop up:
