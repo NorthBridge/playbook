@@ -6,6 +6,14 @@ Installation
 
 	https://www.python.org/downloads/release/python-2710/
 
+Go to your environment variables and make the variable "PYTHON_HOME" in user variable with path: "C:\Python27"
+In Path (system variables) add the following: 
+	
+	;%PYTHON_HOME%;%PYTHON_HOME%/Scripts;
+
+(making sure to add ';' before if there are other paths in there.)
+In PATH add "C:\Python27"
+
 ###2) Install project dependencies. There are two ways to do this:
 
 
@@ -55,7 +63,7 @@ Install python dependencies (while in virtual environment aka (playbook)):
 	msiexec/i C:\Users\\Downloads\VCForPython27.msi ALLUSERS=1
 
 ###3) Install PostgreSQL: http://www.postgresql.org/download/windows/
-Go to your environment variables and add postgres to the PATH. (Should look something like C:\Program Files\PostgreSQL\9.x\bin;)
+Go to your environment variables and add postgres to the PATH user variable. (Should look something like C:\Program Files\PostgreSQL\9.x\bin;)
 
 ###4) Update your database connection settings using your database admin user
 
