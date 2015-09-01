@@ -5,9 +5,9 @@ from ..util import queued_status_id, selected_status_id
 from ..constants import ACCEPT_ISSUE_LABEL
 from ..github_settings import GITHUB_OWNER, GITHUB_TOKEN
 from ..github import create_milestone_data
-from ...core.models.backlog import Backlog, Status
-from ...core.models.acceptance_criteria import AcceptanceCriteria
-from ...core.shortcuts import send_email
+from playbook.apps.core.models.backlog import Backlog, Status
+from playbook.apps.core.models.acceptance_criteria import AcceptanceCriteria
+from playbook.apps.core.shortcuts import send_email
 
 logger = logging.getLogger("playbook")
 

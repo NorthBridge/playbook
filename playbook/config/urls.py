@@ -22,7 +22,7 @@ urlpatterns = [
     url(r'^accounts/login/$', login, name='login'),
     url(r'^accounts/logout/$', logout, name='logout'),
     url(r'^playbook/$', views.index, name='index'),
-    url(r'^playbook/backlog/', include('playbook.backlog.urls')),
-    url(r'^playbook/core/', include('playbook.core.urls')),
+    url(r'^playbook/backlog/', include('playbook.apps.backlog.urls')),
+    url(r'^playbook/core/', include('playbook.apps.core.urls')),
     url(r'^admin/', include(admin.site.urls)),
 ]

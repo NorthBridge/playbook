@@ -1,4 +1,4 @@
-from ..core.models import Backlog, Status, TeamProject
+from playbook.apps.core.models import Backlog, Status, TeamProject
 from .constants import DB_OPEN_STATUS_NAME, DB_SELECTED_STATUS_NAME,\
     DB_QUEUED_STATUS_NAME, DB_ACCEPTED_STATUS_NAME
 

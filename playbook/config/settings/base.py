@@ -42,9 +42,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'playbook.core',
-    'playbook.backlog',
-    'playbook.accounts',
+    'playbook.apps.shared',
+    'playbook.apps.backlog',
+    'playbook.apps.accounts',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -86,11 +86,11 @@ SESSION_COOKIE_AGE = 10 * 60  # 10 minutes
 DATABASES = {
     'default': {
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': os.environ['PLAYBOOK_DB_NAME'],
-    'USER': os.environ['PLAYBOOK_DB_USER'],
+    'NAME':     os.environ['PLAYBOOK_DB_NAME'],
+    'USER':     os.environ['PLAYBOOK_DB_USER'],
     'PASSWORD': os.environ['PLAYBOOK_DB_PASSWORD'],
-    'HOST': os.environ['PLAYBOOK_DB_HOST'],
-    'PORT': os.environ['PLAYBOOK_DB_PORT'],
+    'HOST':     os.environ['PLAYBOOK_DB_HOST'],
+    'PORT':     os.environ['PLAYBOOK_DB_PORT'],
     }
 }
 
