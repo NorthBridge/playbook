@@ -299,10 +299,16 @@ Go to [localhost:8000/playbook](http://127.0.0.1:8000/playbook) in a web browser
 Troubleshooting Errors
 ======================
 
-#### Error: pg_config executable not found.
+#### Error: pg_config executable not found
 
-Make sure PostGres is installed (see Step 3) Install PostgreSQL.
+Make sure PostGres is installed (see Step 3).
 
 #### Error: permission denied to create database
 
-Create a new post the user privileges (see Step 3c) or create the database from the Postgres app and transfer privileges (see Step 4b)
+Create a new PostGres user with superuser privileges (see Step 3c), or create the database from opening psql in the Postgres app and then transfering privileges (see Step 4b).
+
+#### Error: unable to connect to localhost:8000/playbook
+
+Make sure you still have runserver running on the terminal. From the project root directory, run
+
+    python manage.py runserver
