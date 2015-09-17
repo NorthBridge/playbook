@@ -2,8 +2,8 @@
 
 *~
 
-# Configuration file.
-*CONFIG
+# OS X LAME FILES
+.DS_Store
 
 # Compiled python modules.
 *.pyc
@@ -34,3 +34,6 @@ playbook/passwords.py
 venv/
 
 venv/*
+
+# Local settings should not be committed
+playbook/config/local.py

@@ -1,0 +1,46 @@
+{% extends "shared/core/base.html" %}
+{% load i18n %}
+{% block head %}
+<script type="text/javascript" language="javascript">
+    $(document).ready(function(){
+        $("#dialog-form").dialog({modal: true});
+
+        var dialog, form, team = $("#team");
+
+        dialog = $("#dialog-form").dialog({
+            autoOpen: false,
+            width: 190,
+            modal: true,
+            buttons: {
+                Submit: function() {
+                    form.submit()
+                },
+                Cancel: function() {
+                    dialog.dialog( "close" );
+                }
+            },
+            close: function() {
+                form[0].reset();
+                team.removeClass( "ui-state-error" );
+            }
+        });
+
+        form = dialog.find("form");
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'backlogs' %}">{% trans "List Backlog for current user" %}</a>
+{% if teams %}
+<div id="dialog-form" title="Select a Team">
+    <form action='/playbook/' method="post">{% csrf_token %}
+        <div>
+            {{ form.team }}
+            <!-- Allow form submission with keyboard without duplicating the dialog button -->
+            <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+        </div>
+    </form>
+</div>
+{% endif %}
+{% endblock %}

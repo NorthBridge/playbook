@@ -1,0 +1,108 @@
+{% load i18n %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    {% load staticfiles %}
+    <script type="text/javascript" src="{% static 'core/js/jquery-2.1.4.js' %}"></script>
+    <script type="text/javascript" src="{% static 'core/js/jquery-ui-1.11.4.custom/jquery-ui.js' %}"></script>
+    <script type="text/javascript" src="{% static 'core/js/jquery.formset.js' %}"></script>
+    <script type="text/javascript" src="{% static 'core/js/common.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'core/js/jquery-ui-1.11.4.custom/jquery-ui.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'core/css/style.css' %}" />
+    <script type="text/javascript" language="javascript">
+    $(document).ready(function(){
+        $("#choose-team").click(function (e) {
+            var getting = $.get("/playbook/core/chooseTeam");
+            getting.done(function (data) {
+                if (data.success) {
+                    $("#dialog-form").remove();
+                    $("body").append(data.html)
+                    $("#dialog-form").dialog({modal: true});
+                    var dialog, form, team = $("#team");
+                    dialog = $("#dialog-form").dialog({
+                        autoOpen: false,
+                        width: 190,
+                        modal: true,
+                        buttons: {
+                            Submit: function() {
+                                var data = $(form).serializeArray();
+                                var posting = $.post("/playbook/core/chooseTeam", $.param(data));
+                                posting.done( function (data) {
+                                    if (data.success) {
+                                        showMessage("Team was selected.");
+                                    } else {
+                                        showErrors(data.messages);
+                                    }
+                                    dialog.dialog( "close" );
+                                });
+                                posting.fail(function (xhr) {
+                                    if (xhr.status == '401') {
+                                        redirectToLogin($(location).attr('pathname'));
+                                    }
+                                });
+                            },
+                            Cancel: function() {
+                                dialog.dialog( "close" );
+                            }
+                        },
+                        close: function() {
+                            form[0].reset();
+                            team.removeClass( "ui-state-error" );
+                        }
+                    });
+
+                    form = dialog.find("#choose-team-form");
+                } else {
+                    showErrors(data.messages);
+                }
+            });
+            getting.fail(function (xhr) {
+                if (xhr.status == '401') {
+                    redirectToLogin($(location).attr('pathname'));
+                }
+            });
+            return false;
+        });
+    });
+    </script>
+    {% block head %}
+    {% endblock %}
+    <title>Playbook App</title>
+</head>
+
+<body>
+    <div class="container">
+        <div id="top-menu" class="top-menu">
+            {% block topmenu %}
+                <a href="{% url 'index' %}">{% trans "Home" %}</a> |
+                {% if user.is_authenticated %}
+                    <a href="{% url 'logout' %}?next=/playbook/">{% trans "Log out" %}</a> |
+                    <a id="choose-team" href="javascript:void(0)">{% trans "Change Team" %}</a> |
+                    {% trans "Logged in as" %}: {{ user.username }}
+                {% else %}
+                    <a href="{% url 'login' %}">{% trans "Log In" %}</a>
+                {% endif %}
+            {% endblock%}
+        </div>
+
+        <div id="header" class="header">
+            {% block header %}
+            {% endblock %}
+        </div>
+
+        <div id="content" class="content">
+            <h1>{% block title %}{% endblock %}</h1>
+            <div id="messages"></div>
+            {% block content %}
+            {% endblock content %}
+        </div>
+
+        <div id="footer" class="footer">
+            {% block footer %}
+            {% endblock %}
+        </div>
+    </div>
+</body>
+
+</html>

@@ -5,7 +5,6 @@ from django.core.urlresolvers import reverse
 
 
 def login_required(function=None):
-
     # ensure the user is authenticated to access a certain ajax view
     # otherwise return a json object notifying the user access is denied
     def _decorator(view_func):
