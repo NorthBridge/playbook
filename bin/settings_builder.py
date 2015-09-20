@@ -13,5 +13,5 @@ def create_settings():
         print("{0} not found. Creating it!".format(target_path))
         open(target_path, 'w').close()
 
-if __name__ == __main__:
+if __name__ == '__main__':
     create_settings()
