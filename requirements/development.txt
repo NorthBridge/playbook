@@ -1,3 +1,0 @@
--r base.txt
-
-django-extensions==1.5.6
