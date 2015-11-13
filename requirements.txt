@@ -1,5 +1,0 @@
-# This is inherits `requirements/production.txt`. If you would like to use a
-# different version, use one from the `requirements` folder.
-
-# Imports from production, which imports from base
--r requirements/production.txt
